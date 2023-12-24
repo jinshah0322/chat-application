@@ -34,13 +34,15 @@
         </div>
     </div>
     <% if (typeof users !== 'undefined' && users.length > 0) { %>
-        <h2>Search Results for '<%= searchTerm %>'</h2>
+        <h2>Matching result for '<%= searchTerm %>'</h2>
         <ul>
             <% users.forEach(user => { %>
+                <br>
                 <li>
                     <strong>Username:</strong> <%= user.username %>,
                     <strong>Email:</strong> <%= user.email %>,
                     <strong>Mobile:</strong> <%= user.mobile %>
+                    &nbsp;&nbsp;
                     <button onclick="sendRequest('<%= user._id %>')">Send Request</button>
                 </li>
             <% }); %>
@@ -51,18 +53,23 @@
 
     <script>
         function sendRequest(userId) {
-            // You can use AJAX (e.g., fetch) or another method to send the request
-            // Replace 'your-server-endpoint' with the actual endpoint to handle the request
             fetch('/send-request', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId }),
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error:', error));
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }),
+        })
+        .then(response => {
+            // Check if the request resulted in a redirect
+            if (response.redirected) {
+                // Manually redirect to the specified location
+                window.location.href = response.url;
+            } else {
+                // Handle other response scenarios as needed
+            }
+        })
+        .catch(error => console.error('Error:', error));
         }
     </script>
     <!-- MDB Bootstrap JS -->

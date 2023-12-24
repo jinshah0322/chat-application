@@ -119,10 +119,12 @@ const reqsent = async(req,res)=>{
             { email: { $regex: searchTerm, $options: 'i' } },
             { mobile: { $regex: searchTerm, $options: 'i' } },
         ]});
-        const reqsentid = req.session.user.requestsSent
         const currentID = req.session.user._id
-        users= users.filter(item=>!reqsentid.includes(item._id.toString()))
         users = users.filter(item=>item._id.toString()!==currentID)
+        var reqsentid = await User.find({_id:currentID},{requestsSent:1,_id:0})
+        var reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
+        users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
+        console.log(users);
         res.render('requestsent', { users, searchTerm });
     } catch(error){
         console.log(error);
