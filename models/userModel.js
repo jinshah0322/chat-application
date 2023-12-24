@@ -26,16 +26,16 @@ var userSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    requestsSent: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User',
+    requestsSent:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User'
     }],
     requestsReceived: [{
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     }],
     friends: [{
-        type: Schema.Types.ObjectId,
+        type: String,
         ref: 'User',
     }],
 },{timestamps:true});

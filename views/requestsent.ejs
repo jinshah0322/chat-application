@@ -1,0 +1,74 @@
+<%-include('layouts/header.ejs')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <!-- MDB Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/css/mdb.min.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+    <!-- Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <div class="input-group">
+            <form action="" method="post">
+            <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                aria-describedby="search-addon" name="searchTerm" required/>
+            <input type="submit" class="btn btn-outline-primary" data-mdb-ripple-init value="search">
+        </form>
+        </div>
+    </div>
+    <% if (typeof users !== 'undefined' && users.length > 0) { %>
+        <h2>Search Results for '<%= searchTerm %>'</h2>
+        <ul>
+            <% users.forEach(user => { %>
+                <li>
+                    <strong>Username:</strong> <%= user.username %>,
+                    <strong>Email:</strong> <%= user.email %>,
+                    <strong>Mobile:</strong> <%= user.mobile %>
+                    <button onclick="sendRequest('<%= user._id %>')">Send Request</button>
+                </li>
+            <% }); %>
+        </ul>
+    <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
+        <p>No results found for '<%= searchTerm %>'</p>
+    <% } %>
+
+    <script>
+        function sendRequest(userId) {
+            // You can use AJAX (e.g., fetch) or another method to send the request
+            // Replace 'your-server-endpoint' with the actual endpoint to handle the request
+            fetch('/send-request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+    <!-- MDB Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/js/mdb.min.js"></script>
+</body>
+
+</html>
+
+<%-include('layouts/footer.ejs')%>

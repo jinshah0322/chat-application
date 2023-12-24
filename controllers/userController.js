@@ -1,6 +1,8 @@
 const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
+const mongoose = require("mongoose")
+
 const registerLoad = async (req,res)=>{
     try{
         res.render("register")
@@ -92,11 +94,58 @@ const loaddashboard = async(req,res)=>{
     }
 }
 
+const loadprofile = async(req,res)=>{
+    try{
+        res.render("profile",{user:req.session.user})
+    }catch(error){
+        console.log(error);
+    }
+}
+
+const loadreqsent = async(req,res)=>{
+    try{
+        res.render("requestsent")
+    }catch(error){
+        console.log(error);
+    }
+}
+
+const reqsent = async(req,res)=>{
+    try{
+        const searchTerm = req.body.searchTerm
+        var users = await User.find(
+            {$or: [
+            { username: { $regex: searchTerm, $options: 'i' } },
+            { email: { $regex: searchTerm, $options: 'i' } },
+            { mobile: { $regex: searchTerm, $options: 'i' } },
+        ]});
+        const reqsentid = req.session.user.requestsSent
+        const currentID = req.session.user._id
+        users= users.filter(item=>!reqsentid.includes(item._id.toString()))
+        users = users.filter(item=>item._id.toString()!==currentID)
+        res.render('requestsent', { users, searchTerm });
+    } catch(error){
+        console.log(error);
+    }
+}
+
+const sendrequest = async(req,res)=>{
+    const userId = req.body.userId;
+    const currentId = req.session.user._id
+    await User.updateOne({_id:userId},{$push:{requestsReceived:currentId}})
+    await User.updateOne({_id:currentId},{$push:{requestsSent:userId}})
+    res.redirect("/dashboard")
+}
+
 module.exports = {
     registerLoad,
     register,
     loginLoad,
     login,
     logout,
-    loaddashboard
+    loaddashboard,
+    loadprofile,
+    loadreqsent,
+    reqsent,
+    sendrequest
 }
