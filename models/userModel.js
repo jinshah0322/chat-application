@@ -25,7 +25,19 @@ var userSchema = new mongoose.Schema({
     image:{
         type:String,
         required:true
-    }
+    },
+    requestsSent: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    requestsReceived: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    }],
 },{timestamps:true});
 
 //Export the model
