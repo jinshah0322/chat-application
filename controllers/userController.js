@@ -13,36 +13,35 @@ const register = async(req,res)=>{
     try{
         const {username,email,mobile,password} = req.body
         const existingUserEmail = await User.findOne({ email: email });
-        if (existingUserEmail) {res.render('register',{message:'User with same email address already exist'})}
         const existingUserNumber = await User.findOne({ mobile: mobile });
-        if (existingUserNumber) {res.render('register',{message:'User with same Mobile Number already exist'})}
-        if(!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email))){
-            res.render('register',{message:'Enter Valid email address'})
-        }
-        if(!(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile))){
-            res.render('register',{message:'Enter Valid moile number'})
-        }
-        if(!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(password))){
-            res.render('register',{message:'Enter strong password'})
-        }
-        const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = await bcryptjs.hash(password, salt)
-        const user = new User({
-            username:username,
-            email:email,
-            password:hashedPassword,
-            image:"images/"+req.file.filename,
-            mobile:mobile
-        })
-        const data = {
-            to: email,
-            text: `Hey ${username}`,
-            subject: "Welcome to our chat application website",
-            html: "<h3>Congrulations you have successfully registered to our chat application website</h3>"
-        }
-        sendEmail(data)
-        await user.save()
-        res.redirect('/')
+        if(!existingUserEmail){
+            if(!existingUserNumber){
+                if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
+                    if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                        if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(password)){
+                            const salt = await bcryptjs.genSalt(10);    
+                            const hashedPassword = await bcryptjs.hash(password, salt)
+                            const user = new User({
+                                username:username,
+                                email:email,
+                                password:hashedPassword,
+                                image:"images/"+req.file.filename,
+                                mobile:mobile
+                            })
+                            const data = {
+                                to: email,
+                                text: `Hey ${username}`,
+                                subject: "Welcome to our chat application website",
+                                html: "<h3>Congrulations you have successfully registered to our chat application website</h3>"
+                            }
+                            sendEmail(data)
+                            await user.save()
+                            res.redirect('/')
+                        } else{res.render('register',{message:'Enter strong password'})}
+                    } else{res.render('register',{message:'Enter Valid moile number'})}
+                } else{res.render('register',{message:'Enter Valid email address'})}
+            } else{res.render('register',{message:'User with same Mobile Number already exist'})}
+        } else{res.render('register',{message:'User with same email address already exist'})}
     } catch(error){
         console.log(error);
     }
