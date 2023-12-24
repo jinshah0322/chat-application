@@ -10,6 +10,10 @@ var chatSchema = new mongoose.Schema({
     receiver_id:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
+    },
+    message:{
+        type:String,
+        required:true
     }
 },{timestamps:true});
 
