@@ -17,10 +17,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-router.route("/register").get(registerLoad).post(upload.single('image'),register)
-router.route("/").get(loginLoad).post(login)
-router.route("/logout").get(logout)
-router.route("/dashboard").get(loaddashboard)
+const {isLogin,isLogout} = require("../middlewares/auth")
+
+router.route("/register").get(isLogout,registerLoad).post(upload.single('image'),register)
+router.route("/").get(isLogout,loginLoad).post(login)
+router.route("/logout").get(isLogin,logout)
+router.route("/dashboard").get(isLogin,loaddashboard)
 router.route("*").get(function(req,res){
     res.redirect("/")
 })
