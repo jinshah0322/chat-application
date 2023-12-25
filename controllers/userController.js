@@ -2,6 +2,7 @@ const User = require("../models/userModel")
 const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 const mongoose = require("mongoose")
+const Chat = require("../models/chatModel")
 
 const registerLoad = async (req,res)=>{
     try{
@@ -169,6 +170,20 @@ const finishrequest = async(req,res)=>{
     res.redirect('/pendingrequest')
 }
 
+const saveChat = async (req,res)=>{
+    try{
+        var chat = new Chat({
+            sender_id:req.body.sender_id,
+            receiver_id:req.body.receiver_id,
+            message:req.body.message
+        })
+        var newChat = await chat.save()
+        res.status(200).send({success:true,message:"Chat added to db successfully",data:newChat})
+    }catch(error){
+        res.status(400).send({success:false,message:error.message})
+    }
+}
+
 module.exports = {
     registerLoad,
     register,
@@ -181,5 +196,6 @@ module.exports = {
     reqsent,
     sendrequest,
     pendingrequest,
-    finishrequest
+    finishrequest,
+    saveChat
 }

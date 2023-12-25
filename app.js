@@ -28,6 +28,12 @@ usp.on('connection',async (socket)=>{
     //Broadcasting the user as online
     socket.broadcast.emit("getOnlineUser",{userId:userId})
 
+    //chatting implementation
+    socket.on("newChat",(data)=>{
+        console.log("atleast");
+        socket.broadcast.emit("loadNewChat",data) 
+    })
+
     socket.on('disconnect',async ()=>{
         await User.updateOne({_id:userId},{$set:{is_online:'0'}})
         //Broadcasting the user as offline
