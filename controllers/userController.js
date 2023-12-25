@@ -30,11 +30,17 @@ const register = async(req,res)=>{
                                 image:"images/"+req.file.filename,
                                 mobile:mobile
                             })
+                            const html = `
+                                <h2>Welcome to our chat application </h2>
+                                <p>Dear [User],</p>
+                                <p>Thank you for joining our chatting community! We are excited to have you on board. With our application, you can connect with friends, chat with new people, and enjoy a seamless communication experience. To get started, log in to your account and explore the features of our application. If you have any questions or need assistance, feel free to contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
+                                <p>Best regards,<br>[Jinay Shah]</p>
+                            `
                             const data = {
                                 to: email,
                                 text: `Hey ${username}`,
-                                subject: "Welcome to our chat application website",
-                                html: "<h3>Congrulations you have successfully registered to our chat application website</h3>"
+                                subject: "Welcome to our chat application ",
+                                html: html
                             }
                             sendEmail(data)
                             await user.save()
@@ -89,7 +95,8 @@ const logout = async(req,res)=>{
 const loaddashboard = async(req,res)=>{
     try{
         const currentId = req.session.user._id
-        const users = await User.find({_id:{$ne:currentId}}).select('-password')
+        const friends = (await User.find({_id:currentId},{friends:1,_id:0}))[0].friends
+        const users = await User.find({_id:{$in:friends}})
         res.render("dashboard",{user:await User.findOne({_id:currentId}),users:users})
     }catch(error){
         console.log(error);
@@ -228,6 +235,55 @@ const forgotPassword = async(req,res)=>{
     }
 }
 
+const loadChangePassword = async(req,res)=>{
+    try{    
+        res.render("changepassword")
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const changePassword = async(req,res)=>{
+    try{
+        const currentId = req.session.user._id
+        const user = await User.findOne({_id:currentId})
+        const {oldPassword,newPassword} = req.body
+        const validPassword = await bcryptjs.compare(oldPassword, user.password)
+        if (!validPassword) {
+            res.render('changepassword',{ message: "Old Password is incorrect", success: false})
+        } else {
+            if(await bcryptjs.compare(newPassword, user.password)){
+                res.render('changepassword',{ message: "Password same as previous", success: false})
+            } else{
+                if(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,1024}$/.test(newPassword)){
+                    const salt = await bcryptjs.genSalt(10);    
+                    const hashedPassword = await bcryptjs.hash(newPassword, salt)
+                    await User.updateOne({_id:currentId},{$set:{password:hashedPassword}})
+                    const html = `
+                    <h2>Password Recovery Instructions</h2>
+                    <p>Dear ${user.username},</p>
+                    <p>We received a request to change your account password. If you did not initiate this request, please or if you have any questions or did not request a password change, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
+                    <p>As per your request we have successfully changed your password you can verify it by again loging in.</p>
+                    <p>Best regards,<br>[Jinay Shah]</p>
+                    `
+                    const data = {
+                        to: user.email,
+                        text: `Change Password`,
+                        subject: "Password Reset Instructions",
+                        html: html
+                    }
+                    sendEmail(data)
+                    res.redirect('/profile')
+                } else{
+                    res.render('changepassword',{message:'Enter strong password'})
+                }
+            }
+        }
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
 module.exports = {
-    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword
+    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword
 }

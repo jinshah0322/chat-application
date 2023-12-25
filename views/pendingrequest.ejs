@@ -106,8 +106,8 @@
                     <p><strong>Email:</strong> <%= user.email %></p>
                     <p><strong>Mobile:</strong> <%= user.mobile %></p>
                     <p><strong>Number of Friends:</strong> <%= user.friends.length %></p>
-                    <button class="btn-accept" onclick="acceptRequest('<%= user.id %>')">Accept</button>
-                    <button class="btn-reject" onclick="rejectRequest('<%= user.id %>')">Reject</button>
+                    <button class="btn-accept" onclick="acceptRequest('<%= user._id %>')">Accept</button>
+                    <button class="btn-reject" onclick="rejectRequest('<%= user._id %>')">Reject</button>
                 </div>
             </div>
         <% }); %>
