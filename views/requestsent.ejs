@@ -61,12 +61,8 @@
             body: JSON.stringify({ userId }),
         })
         .then(response => {
-            // Check if the request resulted in a redirect
             if (response.redirected) {
-                // Manually redirect to the specified location
                 window.location.href = response.url;
-            } else {
-                // Handle other response scenarios as needed
             }
         })
         .catch(error => console.error('Error:', error));

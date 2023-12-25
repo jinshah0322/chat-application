@@ -88,7 +88,8 @@ const logout = async(req,res)=>{
 
 const loaddashboard = async(req,res)=>{
     try{
-        res.render("dashboard",{user:req.session.user})
+        const currentId = req.session.user._id
+        res.render("dashboard",{user:await User.findOne({_id:currentId})})
     }catch(error){
         console.log(error);
     }
@@ -96,7 +97,8 @@ const loaddashboard = async(req,res)=>{
 
 const loadprofile = async(req,res)=>{
     try{
-        res.render("profile",{user:req.session.user})
+        const currentId = req.session.user._id
+        res.render("profile",{user:await User.findOne({_id:currentId})})
     }catch(error){
         console.log(error);
     }
@@ -139,6 +141,34 @@ const sendrequest = async(req,res)=>{
     res.redirect("/dashboard")
 }
 
+const pendingrequest = async(req,res)=>{
+    try{
+        const currentID = req.session.user._id
+        var reqrecid = await User.find({_id:currentID},{requestsReceived:1,_id:0})
+        var reqrecid = reqrecid.map(doc => doc.requestsReceived).flat();
+        const users = await User.find({_id:{$in:reqrecid}})
+        res.render("pendingrequest",{users:users})
+    }catch(error){
+        console.log(error);
+    }
+}
+
+const finishrequest = async(req,res)=>{
+    const {userId,accept} = req.body
+    console.log(req.body);
+    const currentId = req.session.user._id
+    if(accept){
+        await User.updateOne({_id:currentId},{$pull:{requestsReceived:userId}})
+        await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
+        await User.updateOne({_id:currentId},{$push:{friends:userId}})
+        await User.updateOne({_id:userId},{$push:{friends:currentId}})
+    } else{
+        await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
+        await User.updateOne({_id:currentId},{$pull:{requestsReceived:userId}})
+    }
+    res.redirect('/pendingrequest')
+}
+
 module.exports = {
     registerLoad,
     register,
@@ -149,5 +179,7 @@ module.exports = {
     loadprofile,
     loadreqsent,
     reqsent,
-    sendrequest
+    sendrequest,
+    pendingrequest,
+    finishrequest
 }
