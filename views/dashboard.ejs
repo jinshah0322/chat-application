@@ -10,6 +10,11 @@
                             <li class="list-group-item list-group-item-dark cursor-pointer user-list">
                                 <img src="<%=user.image%>" width="40px" height="40px">
                                 <%=user.username%>
+                                <%if(user.is_online==='1'){%>
+                                    <sup class="online-status" id="<%=user._id%>-status">Online</sup>
+                                <%} else{%>
+                                    <sup class="offline-status" id="<%=user._id%>-status">Offline</sup>
+                                <%}%>
                             </li>
                         <%
                     });
@@ -42,5 +47,19 @@
             $('.chat-section').show()
         })
     })
-</script>
+
+    //update user online status
+    socket.on("getOnlineUser",(data)=>{
+        $('#'+data.userId+'-status').text("Online")
+        $('#'+data.userId+'-status').removeClass()
+        $('#'+data.userId+'-status').addClass('online-status')
+    })
+
+    //update user offline status
+    socket.on("getOfflineUser",(data)=>{
+        $('#'+data.userId+"-status").text("Offline")
+        $('#'+data.userId+"-status").removeClass()
+        $('#'+data.userId+"-status").addClass("offline-status")
+    })
+</script>   
 <%-include('layouts/footer.ejs')%>

@@ -25,8 +25,13 @@ usp.on('connection',async (socket)=>{
     const userId = socket.handshake.auth.token
     console.log(`UserID ${userId} connected`);
     await User.updateOne({_id:userId},{$set:{is_online:'1'}})
+    //Broadcasting the user as online
+    socket.broadcast.emit("getOnlineUser",{userId:userId})
+
     socket.on('disconnect',async ()=>{
         await User.updateOne({_id:userId},{$set:{is_online:'0'}})
+        //Broadcasting the user as offline
+        socket.broadcast.emit("getOfflineUser",{userId:userId})
         console.log('user disconnected');
     })
 })
