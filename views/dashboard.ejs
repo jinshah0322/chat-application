@@ -43,6 +43,10 @@
             token:'<%=user._id%>'
         }
     })
+    var friends = "<%=user.friends%>"
+    if(friends.length == 0){
+        $('.start-head').text('You have no friends')
+    }
 
     $(document).ready(function(){
         $('.user-list').click(function(){
