@@ -5,6 +5,7 @@ const bodyParser = require("body-parser")
 const userRoute = require("./routes/userRoute")
 const session = require("express-session")
 const User = require("./models/userModel")
+const Chat = require("./models/chatModel")
 
 const app = express()
 const http = require('http').Server(app)
@@ -31,6 +32,18 @@ usp.on('connection',async (socket)=>{
     //chatting implementation
     socket.on("newChat",(data)=>{
         socket.broadcast.emit("loadNewChat",data) 
+    })
+
+    //load old chats
+    socket.on("existsChat",async (data)=>{
+        const chats = await Chat.find({
+            $or:[
+                {sender_id:data.sender_id,receiver_id:data.receiver_id},
+                {sender_id:data.receiver_id,receiver_id:data.sender_id}
+            ]
+        })
+        console.log(chats);
+        socket.emit("loadChats",{chats:chats})
     })
 
     socket.on('disconnect',async ()=>{

@@ -50,6 +50,8 @@
             receiver_id = userId
             $('.start-head').hide()
             $('.chat-section').show()
+
+            socket.emit('existsChat',{sender_id: sender_id, receiver_id: receiver_id})
         })
     })
 
@@ -102,6 +104,27 @@
             `
             $('#chat-container').append(html)
         }
+    })
+
+    //load old chats
+    socket.on("loadChats",function(data){
+        $("#chat-container").html('')
+        var chats = data.chats
+        var html = ''
+        chats.forEach(chat => {
+            let addClass = ''
+            if(chat.sender_id == sender_id){
+                addClass = 'current-user-chat'
+            } else{
+                addClass = 'distance-user-chat'
+            }
+            html+=`
+            <div class="${addClass}">
+                    <h5>${chat.message}</h5>
+            </div>
+            `
+        });
+        $('#chat-container').append(html)
     })
 </script>   
 <%-include('layouts/footer.ejs')%>
