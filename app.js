@@ -30,7 +30,6 @@ usp.on('connection',async (socket)=>{
 
     //chatting implementation
     socket.on("newChat",(data)=>{
-        console.log("atleast");
         socket.broadcast.emit("loadNewChat",data) 
     })
 
