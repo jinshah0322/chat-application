@@ -155,7 +155,6 @@ const pendingrequest = async(req,res)=>{
 
 const finishrequest = async(req,res)=>{
     const {userId,accept} = req.body
-    console.log(req.body);
     const currentId = req.session.user._id
     if(accept){
         await User.updateOne({_id:currentId},{$pull:{requestsReceived:userId}})
