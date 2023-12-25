@@ -89,7 +89,8 @@ const logout = async(req,res)=>{
 const loaddashboard = async(req,res)=>{
     try{
         const currentId = req.session.user._id
-        res.render("dashboard",{user:await User.findOne({_id:currentId})})
+        const users = await User.find({_id:{$ne:currentId}}).select('-password')
+        res.render("dashboard",{user:await User.findOne({_id:currentId}),users:users})
     }catch(error){
         console.log(error);
     }
