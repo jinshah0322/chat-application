@@ -3,7 +3,6 @@ const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 const mongoose = require("mongoose")
 const Chat = require("../models/chatModel")
-
 const registerLoad = async (req,res)=>{
     try{
         res.render("register")
@@ -184,18 +183,51 @@ const saveChat = async (req,res)=>{
     }
 }
 
+const loadForgotPassword = async(req,res)=>{
+    try{
+        res.render("forgotpassword")
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const forgotPassword = async(req,res)=>{
+    try{
+        const email = req.body.email
+        const user = await User.findOne({email:email})
+        const characters = process.env.PASSWORD_GENERATOR_STRING;
+        if(user){
+            let generatedPassword = '';
+            for (let i = 0; i < 15; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                generatedPassword += characters.charAt(randomIndex);
+            }
+            const salt = await bcryptjs.genSalt(10);    
+            const hashedPassword = await bcryptjs.hash(generatedPassword, salt)
+            await User.updateOne({email:email},{$set:{password:hashedPassword}})
+            const html = `
+            <h2>Password Recovery Instructions</h2>
+            <p>Dear ${user.username},</p>
+            <p>We received a request to recover your account password. If you did not initiate this request, please disregard this email.</p>
+            <p>Your new temporary password is <b>${generatedPassword}</b> you can change this later after loging in.Please dont share this to other for you safety purpose.If you have any questions or did not request a password reset, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
+            <p>Best regards,<br>[Jinay Shah]</p>
+            `
+            const data = {
+                to: email,
+                text: `Recover Password`,
+                subject: "Password Recovery Instructions",
+                html: html
+            }
+            sendEmail(data)
+            res.render("forgotpassword",{message:"Check your email address",success:true})
+        } else{
+            res.render("forgotpassword",{message:"user not found",success:false})
+        }
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
 module.exports = {
-    registerLoad,
-    register,
-    loginLoad,
-    login,
-    logout,
-    loaddashboard,
-    loadprofile,
-    loadreqsent,
-    reqsent,
-    sendrequest,
-    pendingrequest,
-    finishrequest,
-    saveChat
+    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword
 }
