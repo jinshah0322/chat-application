@@ -32,7 +32,7 @@ const register = async(req,res)=>{
                             })
                             const html = `
                                 <h2>Welcome to our chat application </h2>
-                                <p>Dear [User],</p>
+                                <p>Dear ${username},</p>
                                 <p>Thank you for joining our chatting community! We are excited to have you on board. With our application, you can connect with friends, chat with new people, and enjoy a seamless communication experience. To get started, log in to your account and explore the features of our application. If you have any questions or need assistance, feel free to contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
                                 <p>Best regards,<br>[Jinay Shah]</p>
                             `
@@ -217,7 +217,7 @@ const forgotPassword = async(req,res)=>{
             <p>Dear ${user.username},</p>
             <p>We received a request to recover your account password. If you did not initiate this request, please disregard this email.</p>
             <p>Your new temporary password is <b>${generatedPassword}</b> you can change this later after loging in.Please dont share this to other for you safety purpose.If you have any questions or did not request a password reset, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
-            <p>Best regards,<br>[Jinay Shah]</p>
+            <p>Best regards,<br>Jinay Shah</p>
             `
             const data = {
                 to: email,
@@ -264,7 +264,7 @@ const changePassword = async(req,res)=>{
                     <p>Dear ${user.username},</p>
                     <p>We received a request to change your account password. If you did not initiate this request, please or if you have any questions or did not request a password change, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a>.</p>
                     <p>As per your request we have successfully changed your password you can verify it by again loging in.</p>
-                    <p>Best regards,<br>[Jinay Shah]</p>
+                    <p>Best regards,<br>Jinay Shah</p>
                     `
                     const data = {
                         to: user.email,
