@@ -7,7 +7,7 @@ const registerLoad = async (req,res)=>{
     try{
         res.render("register")
     } catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -51,7 +51,7 @@ const register = async(req,res)=>{
             } else{res.render('register',{message:'User with same Mobile Number already exist'})}
         } else{res.render('register',{message:'User with same email address already exist'})}
     } catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -59,7 +59,7 @@ const loginLoad = async(req,res)=>{
     try{
         res.render("login")
     } catch(error){ 
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -79,7 +79,7 @@ const login = async(req,res)=>{
             }
         }
     }catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -88,7 +88,7 @@ const logout = async(req,res)=>{
         req.session.destroy()
         res.redirect("/")
     } catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -99,7 +99,7 @@ const loaddashboard = async(req,res)=>{
         const users = await User.find({_id:{$in:friends}})
         res.render("dashboard",{user:await User.findOne({_id:currentId}),users:users})
     }catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -108,7 +108,7 @@ const loadprofile = async(req,res)=>{
         const currentId = req.session.user._id
         res.render("profile",{user:await User.findOne({_id:currentId})})
     }catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -116,7 +116,7 @@ const loadreqsent = async(req,res)=>{
     try{
         res.render("requestsent")
     }catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -134,10 +134,9 @@ const reqsent = async(req,res)=>{
         var reqsentid = await User.find({_id:currentID},{requestsSent:1,_id:0})
         var reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
         users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
-        console.log(users);
         res.render('requestsent', { users, searchTerm });
     } catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
@@ -157,7 +156,7 @@ const pendingrequest = async(req,res)=>{
         const users = await User.find({_id:{$in:reqrecid}})
         res.render("pendingrequest",{users:users})
     }catch(error){
-        console.log(error);
+        console.log(error.message);
     }
 }
 
