@@ -6,6 +6,7 @@ const userRoute = require("./routes/userRoute")
 const session = require("express-session")
 
 const app = express()
+const http = require('http').Server(app)
 app.use(session({secret:process.env.EXPRESS_SESSION_SECRET}))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -17,6 +18,6 @@ mongoose.connect(process.env.MONGO_URL)
 
 app.use("/",userRoute)
 
-app.listen(process.env.PORT,()=>{
+http.listen(process.env.PORT,()=>{
     console.log(`Server is listening on PORT: ${process.env.PORT}`);
 })
