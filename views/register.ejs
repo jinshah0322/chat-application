@@ -20,11 +20,11 @@
 
         .register-container {
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);        
             border-radius: 8px;
-            width: 400px; /* Adjusted width to 400px */
+            width: 600px; /* Adjusted width to 400px */
             text-align: center;
+            padding: 40px !important;
         }
 
         h1 {
@@ -85,7 +85,7 @@
 </head>
 <body>
     <div class="register-container">
-        <h1>Register</h1>
+        <h1>Register</h1><br>
         <% if (typeof message !== "undefined") { %>
             <p style="color: red;"><%= message %></p>
         <% } %>
