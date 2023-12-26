@@ -6,32 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <!-- Include Bootstrap stylesheet -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+
 
         .profile-container {
-            background-color: #fff;
+            background-color: #C6C8CA;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 35px;
             border-radius: 8px;
-            width: 600px; /* Adjusted width to 600px for a wider layout */
+            width: 700px;         
             text-align: center;
             display: flex;
             flex-direction: row;
             align-items: center;
         }
 
+        body{
+            color: #000 !important;
+        }
+
         .profile-info {
+            width: 100%;
             margin-left: 20px;
             text-align: left;
         }
@@ -42,6 +37,7 @@
 
         .profile-info p {
             margin: 10px 0;
+            font-size: 17px;
         }
 
         img {
@@ -64,38 +60,32 @@
             width: 100%;
         }
 
-        .btn-bootstrap:hover {
-            background-color: #0056b3;
-        }
+ 
 
-        a {
-            text-decoration: none;
-            color: #3498db;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        a:hover {
-            color: #2c3e50;
-        }
-
+     button:hover{
+        color: #fff !important;
+     }
     </style>
 </head>
 <body>
+    <div style="margin-left: 250px ;">
+        <h1 style="margin-top: -30px;font-weight: 700;color: #000;">User Profile</h1><br>
     <div class="profile-container">
+
         <img src="<%=user.image%>" alt="Profile Image">
         <div class="profile-info">
-            <h1>User Profile</h1>
             <p><strong>Username:</strong> <%=user.username%></p>
             <p><strong>Email:</strong> <%=user.email%></p>
             <p><strong>Mobile:</strong> <%=user.mobile%></p>
-            <p><strong>Number of Friends:</strong> <%=user.friends.length%></p>
-            <div>
+            <p><strong>Friends:</strong> <%=user.friends.length%></p>
+            <div style="display: flex;">
                 <button class="btn btn-bootstrap" onclick="redirectToEditProfile()">Edit Profile</button>
-                <button class="btn btn-bootstrap" onclick="redirectToChangePassword()">Change Password</button>
+                <button class="btn btn-bootstrap" style="margin-left: 10px;" onclick="redirectToChangePassword()">Change Password</button>
             </div>
         </div>
     </div>
+    </div>
+
     <script>
         function redirectToEditProfile() {
             window.location.href = '/editprofile';
