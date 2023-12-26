@@ -42,7 +42,6 @@ usp.on('connection',async (socket)=>{
                 {sender_id:data.receiver_id,receiver_id:data.sender_id}
             ]
         })
-        console.log(chats);
         socket.emit("loadChats",{chats:chats})
     })
 

@@ -8339,7 +8339,7 @@ a[data-toggle="collapse"] {
     background-color: #eee;
     width: 105%;
 
-    height: 500px;
+    height: 80vh;
 
     overflow-y: scroll;
   } 
