@@ -1,14 +1,17 @@
 <%-include('layouts/header.ejs')%>
-<h2 class="mb-4">Hii,<%=user.username%></h2>
-<div class="row">
+<div style="margin-left: 250px;">
+<!-- <h2 class="mb-4">Hii, <b><%=user.username%></b></h2> -->
+<div class="row" style="margin-top: -30px;">
     <div class="col-md-3">
         <ul class="list-group">
             <% 
                 if(users.length>0) {
                     users.forEach(user =>{
                         %>
-                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
-                                <img src="<%=user.image%>" width="40px" height="40px">
+                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>" data-status="<%=user.is_online%>"
+                                style="background: #eee;"
+                                >
+                                <img src="<%=user.image%>" width="40px" height="40px" style="border-radius: 50%;">
                                 <%=user.username%>
                                 <%if(user.is_online==='1'){%>
                                     <sup class="online-status" id="<%=user._id%>-status">Online</sup>
@@ -23,13 +26,16 @@
         </ul>
     </div>
     <div class="col-md-9">
-        <h3 class="start-head">Click to start the chat</h3>
+        <h1 class="start-head" style="text-align: center;margin-top: 18%;margin-left: -30%;"></h1>
         <div class="chat-section">
+            <div class="chat-header">
+                
+            </div>
             <div id="chat-container">
                 
             </div>
-            <form action="" id="chat-form">
-                <input type="text" name="message" placeholder="Enter Message" id="message" class="border" required>
+            <form action="" id="chat-form" style="width: 105%; margin-top: 10px">
+                <input type="text" name="message" style="padding: 6px;outline: none;" placeholder="Enter Message" id="message" class="border" autocomplete="off" required>
                 <input type="submit" value="Send Message" class="btn btn-primary">
             </form>
         </div>
@@ -87,7 +93,7 @@
                     let chat = response.data.message;
                     let html = `
                         <div class="current-user-chat">
-                            <h5>${chat}</h5>
+                            <h5 class="chat-user">${chat}</h5>
                         </div>
                     `;
                     $("#chat-container").append(html);
@@ -104,7 +110,7 @@
         if(sender_id === data.receiver_id && receiver_id === data.sender_id){
             let html = `
                 <div class="distance-user-chat">
-                    <h5>${data.message}</h5>
+                    <h5 class="chat-user">${data.message}</h5>
                 </div>
             `
             $('#chat-container').append(html)
@@ -126,7 +132,7 @@
             }
             html+=`
             <div class="${addClass}">
-                    <h5>${chat.message}</h5>
+                    <h5 class="chat-user">${chat.message}</h5>
             </div>
             `
         });

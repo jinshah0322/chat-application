@@ -10,19 +10,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Profile</title>
     <!-- Include Bootstrap stylesheet -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> -->
     <style>
         /* Your existing styles here */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+      
 
         .profile-container {
             background-color: #fff;
@@ -42,79 +33,73 @@
         }
 
         h1 {
-            color: #333;
+            color: #000;
+            font-weight: bold;
         }
 
         .profile-info p {
             margin: 10px 0;
         }
 
-        img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-right: 20px;
+    
+
+
+        .pending li {
+            width: 22vw !important;
+            height:20vw !important;
+            list-style: none !important;
+            padding: 20px !important;
+            margin-left: 10px !important;
         }
 
-        .btn-bootstrap {
-            /* Use the default Bootstrap color for the button */
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        .btn-bootstrap:hover {
-            background-color: #0056b3;
-        }
-
-        a {
-            text-decoration: none;
-            color: #3498db;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        a:hover {
-            color: #2c3e50;
+        .image-user{
+            border-radius: 50% !important;
         }
         .btn-accept {
             background-color: #28a745; /* Green color for accept button */
             color: #fff;
+            margin-top: 10px ;
         }
 
         .btn-reject {
             background-color: #dc3545; /* Red color for reject button */
             color: #fff;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Pending Requests</h1>
-    <% if (typeof users !== 'undefined' && users.length > 0) { %>
-        <% users.forEach(user => { %>
-            <div class="profile-container">
-                <img src="<%= user.image %>" alt="Profile Image">
-                <div class="profile-info">
-                    <h1>User Profile</h1>
-                    <p><strong>Username:</strong> <%= user.username %></p>
-                    <p><strong>Email:</strong> <%= user.email %></p>
-                    <p><strong>Mobile:</strong> <%= user.mobile %></p>
-                    <p><strong>Number of Friends:</strong> <%= user.friends.length %></p>
-                    <button class="btn-accept" onclick="acceptRequest('<%= user._id %>')">Accept</button>
-                    <button class="btn-reject" onclick="rejectRequest('<%= user._id %>')">Reject</button>
-                </div>
+    <div class="pending" style="margin-left: 250px;">
+    <h1 >Pending Requests</h1><br>
+    <div style="display: flex;">
+        <% if (typeof users !== 'undefined' && users.length > 0) { %>
+            <div class="row">
+                <% users.forEach((user, index) => { %>
+                    <div class="col-md-4 mb-4">
+                        <li class="rounded list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
+                            <img src="<%=user.image%>" width="90px" height="90px" class="image-user">
+                            <br><br>
+                            <b>Name:</b> <%=user.username%><br>
+                            <b>Mobile:</b> <%=user.mobile%><br>
+                            <b>Email:</b> <%=user.email%><br>
+                            <b>Friends: </b><%=user.friends.length%><br>
+                            <button class="btn btn-accept" onclick="acceptRequest('<%= user._id %>')">Accept</button>
+                            <button class="btn btn-reject" onclick="rejectRequest('<%= user._id %>')">Reject</button>
+                        </li>
+                    </div>
+        
+                    <% if ((index + 1) % 4 === 0 && index !== users.length - 1) { %>
+                        </div>
+                        <div class="row">
+                    <% } %>
+                <% }); %>
             </div>
-        <% }); %>
-    <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
-        <p>There are no pending requests</p>
-    <% } %>
-
+        <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
+            <p>There are no pending requests</p>
+        <% } %>
+        
+    </div>
+    </div>
     <script>
         function acceptRequest(userId) {
             fetch('/pendingrequest', {
