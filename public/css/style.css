@@ -8337,8 +8337,10 @@ a[data-toggle="collapse"] {
 
   #chat-container{
     background-color: #eee;
-    width: 100%;
+    width: 105%;
+
     height: 500px;
+
     overflow-y: scroll;
   } 
 
