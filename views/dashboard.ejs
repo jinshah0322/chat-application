@@ -8,7 +8,7 @@
                 if(users.length>0) {
                     users.forEach(user =>{
                         %>
-                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
+                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>">
                                 <img src="<%=user.image%>" width="40px" height="40px">
                                 <%=user.username%>
                                 <%if(user.is_online==='1'){%>
@@ -58,7 +58,7 @@
     $(document).ready(function(){
         $('.user-list').click(function(){
             var userId = $(this).attr('data-id')
-
+            
             receiver_id = userId
             $('.start-head').hide()
             $('.chat-section').show()
