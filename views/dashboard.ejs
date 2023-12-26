@@ -1,14 +1,16 @@
 <%-include('layouts/header.ejs')%>
 <div style="margin-left: 250px">
 <!-- <h2 class="mb-4">Hii, <b><%=user.username%></b></h2> -->
-<div class="row">
+<div class="row" style="margin-top: -30px;">
     <div class="col-md-3">
         <ul class="list-group">
             <% 
                 if(users.length>0) {
                     users.forEach(user =>{
                         %>
-                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>">
+                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>"
+                                style="background: #eee;"
+                                >
                                 <img src="<%=user.image%>" width="40px" height="40px">
                                 <%=user.username%>
                                 <%if(user.is_online==='1'){%>
@@ -29,10 +31,10 @@
             <div class="chat-header">
                 
             </div>
-            <div id="chat-container" >
+            <div id="chat-container">
                 
             </div>
-            <form action="" id="chat-form">
+            <form action="" id="chat-form" style="width: 105%;">
                 <input type="text" name="message" placeholder="Enter Message" id="message" class="border" required>
                 <input type="submit" value="Send Message" class="btn btn-primary">
             </form>
@@ -58,10 +60,11 @@
             var receiver_name= $(this).attr('data-name')
             var receiver_image= $(this).attr('data-image')
             let html = `
-                <div>
-                    <h5>${receiver_name}</h5>
-                    <img src="${receiver_image}" width="20px" height="20px">
-                </div>
+            <div style="display: flex; align-items: center;background:#4a4a4a;width:105%;padding:10px">
+                <img src="${receiver_image}" width="50px" height="50px" style="margin-left:15px">
+                <h5 style="margin-left:10px;color:white;margin-top:5px">${receiver_name}</h5>
+            </div>
+
             `
             $('.chat-header').html(html)
             $('.start-head').hide()
