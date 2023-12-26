@@ -1,110 +1,127 @@
-<%-include('layouts/header.ejs')%>
-    <!DOCTYPE html>
-    <html lang="en">
+<%- include('layouts/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
 
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title></title>
-        <style>
-            form{
-                display: flex !important;
-            }
-            .data li{
-                width: 23vw !important;
-                height: 23vw !important;
-                list-style: none !important;
-                padding: 20px !important;
-                margin-left: 10px !important;
-            }
-            .data ul{
-                display: flex !important;
-            }
-            .data .btn{
-                font-size: 15px !important;
-                margin-top: 10px !important;
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <style>
+        form {
+            display: flex !important;
+        }
 
-            }
-        </style>
+        body{
+            overflow-x: hidden !important;
+        }
+        .data li {
+            width: 23vw !important;
+            height: 23vw !important;
+            list-style: none !important;
+            padding: 20px !important;
+            margin-left: 10px !important;
+        }
 
-        <!-- MDB Bootstrap CSS -->
-        <!-- <link href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/css/mdb.min.css" rel="stylesheet"> -->
+        .image-user{
+            border-radius: 50% !important;
+        }
 
-        <!-- Bootstrap CSS -->
-        <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"> -->
+        .data{
+            margin-left: 220px !important;
+        }
 
-        <!-- Font Awesome -->
-        <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> -->
+        .data ul {
+            display: flex !important;
+        }
 
-        <!-- Popper.js -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+        .data .btn {
+            font-size: 15px !important;
+            margin-top: 10px !important;
+        }
+    </style>
 
-        <!-- Bootstrap JS -->
-        <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
-    </head>
+    <!-- MDB Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/css/mdb.min.css" rel="stylesheet"> -->
 
-    <body>
-        <div class="container">
-            <h1 class="font-weight-bold">Send Request to your friend</h1><br>
+    <!-- Bootstrap CSS -->
+    <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"> -->
 
-            <div class="input-group">
-                <form action="" method="post">
-                    <input type="search" class="form-control border rounded" placeholder="Search" aria-label="Search"
-                        aria-describedby="search-addon" name="searchTerm" required />
-                    <input type="submit" class="btn btn-outline-primary" data-mdb-ripple-init value="search">
-                </form>
-            </div>
+    <!-- Font Awesome -->
+    <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"> -->
+
+    <!-- Popper.js -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> -->
+
+    <!-- Bootstrap JS -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> -->
+</head>
+
+<body>
+    <div class="container" style="margin-left: 250px;margin-top: -30px;">
+        <h1 class="font-weight-bold">Send Request to your friend</h1><br>
+
+        <div class="input-group">
+            <form action="" method="post">
+                <input type="search" class="form-control border rounded" placeholder="Search" aria-label="Search"
+                    aria-describedby="search-addon" name="searchTerm" required 
+                    style="width: 400px;"
+                    />
+                <input type="submit" class="btn btn-outline-primary" data-mdb-ripple-init value="search" style="margin-left: 10px;">
+            </form>
         </div>
-        <% if (typeof users !=='undefined' && users.length> 0) { %>
-            <h2>Matching result for '<%= searchTerm %>'</h2>
-            <div class="data">
-            <ul>
-                <%var count=1%>
-                <% users.forEach(user=> { %>
-                    <br>
+    </div>
 
-                    <li class="rounded list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
-                        <img src="<%=user.image%>" width="90px" height="90px">                      
-                        <br><br>
-                        <b>Name:</b> <%=user.username%><br>                
-                        <b>Mobile:</b> <%=user.mobile%><br>
-                        <b>Email:</b> <%=user.email%><br>
-                        <b>Friends: </b><%=user.friends.length%><br>
-                            <button class="btn btn-primary" onclick="sendRequest('<%= user._id %>')">Send Request</button>
-                                               
-                        %>
-                    </li>
+    <% if (typeof users !== 'undefined' && users.length > 0) { %>
+    <h2 style="margin-left: 270px;margin-top: 30px;">Matching result for '<%= searchTerm %>'</h2>
+    <div class="data">
+        <ul>
+            <% var count = 1 %>
+            <% users.forEach((user, index) => { %>
+            <% if (index % 3 === 0 && index !== 0) { %>
+        </ul>
+        <ul>
+            <% } %>
+            <br>
 
+            <li class="rounded list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
+                <img src="<%=user.image%>" width="90px" height="90px"  class="image-user">
+                <br><br>
+                <b>Name:</b> <%=user.username%><br>
+                <b>Mobile:</b> <%=user.mobile%><br>
+                <b>Email:</b> <%=user.email%><br>
+                <b>Friends: </b><%=user.friends.length%><br>
+                <button class="btn btn-primary" onclick="sendRequest('<%= user._id %>')">Send Request</button>
+            </li>
 
-                    <% }); %>
-            </ul>
-            </div>
-            <% } else if (typeof users !=='undefined' && users.length===0) { %>
-                <p>No results found for '<%= searchTerm %>'</p>
-                <% } %>
+            <% }); %>
+        </ul>
+    </div>
+    <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
+    <p>No results found for '<%= searchTerm %>'</p>
+    <% } %>
 
-                    <script>
-                        function sendRequest(userId) {
-                            fetch('/send-request', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({ userId }),
-                            })
-                                .then(response => {
-                                    if (response.redirected) {
-                                        window.location.href = response.url;
-                                    }
-                                })
-                                .catch(error => console.error('Error:', error));
-                        }
-                    </script>
-                    <!-- MDB Bootstrap JS -->
-                    <script src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/js/mdb.min.js"></script>
-    </body>
+    <script>
+        function sendRequest(userId) {
+            fetch('/send-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+    <!-- MDB Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@3.11.0/js/mdb.min.js"></script>
+</body>
 
-    </html>
+</html>
 
-    <%-include('layouts/footer.ejs')%>
+<%- include('layouts/footer.ejs') %>

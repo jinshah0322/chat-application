@@ -1,4 +1,4 @@
-/*!
+/* !
  * Bootstrap v4.3.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 The Bootstrap Authors
  * Copyright 2011-2019 Twitter, Inc.
@@ -8336,10 +8336,10 @@ a[data-toggle="collapse"] {
   }
 
   #chat-container{
-    background-color: lightblue;
+    background-color: #eee;
     width: 100%;
     height: 500px;
-    overflow: scroll;
+    overflow-y: scroll;
   } 
 
   .border{
@@ -8366,3 +8366,28 @@ a[data-toggle="collapse"] {
   .distance-user-chat{
     margin: 10px;
   }
+
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  
+  .chat-container{
+    overflow-x: hidden !important;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #4a4a4a; 
+    border-radius: 5px;
+  }
+  
+.chat-user{
+  background: white !important;
+  color: black !important;
+  padding: 10px !important;
+  padding-left: 25px !important;
+  padding-right: 25px !important;
+  border-radius: 42px !important;
+  display: inline-block !important;
+}

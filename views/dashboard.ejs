@@ -1,5 +1,6 @@
 <%-include('layouts/header.ejs')%>
-<h2 class="mb-4">Hii,<%=user.username%></h2>
+<div style="margin-left: 250px;">
+<h2 class="mb-4">Hii, <b><%=user.username%></b></h2>
 <div class="row">
     <div class="col-md-3">
         <ul class="list-group">
@@ -23,9 +24,12 @@
         </ul>
     </div>
     <div class="col-md-9">
-        <h3 class="start-head">Click to start the chat</h3>
+        <h1 class="start-head" style="text-align: center;margin-top: 18%;margin-left: -30%;"></h1>
         <div class="chat-section">
-            <div id="chat-container">
+            <div class="chat-header">
+                
+            </div>
+            <div id="chat-container" >
                 
             </div>
             <form action="" id="chat-form">
@@ -45,12 +49,13 @@
     })
     var friends = "<%=user.friends%>"
     if(friends.length == 0){
-        $('.start-head').text('You have no friends')
+        $('.start-head').text('Add friends to start a chat')
     }
 
     $(document).ready(function(){
         $('.user-list').click(function(){
             var userId = $(this).attr('data-id')
+            
             receiver_id = userId
             $('.start-head').hide()
             $('.chat-section').show()
@@ -126,7 +131,7 @@
             }
             html+=`
             <div class="${addClass}">
-                    <h5>${chat.message}</h5>
+                    <h5 class="chat-user">${chat.message}</h5>
             </div>
             `
         });
@@ -140,4 +145,5 @@
         },0)
     }
 </script>   
+</div>
 <%-include('layouts/footer.ejs')%>
