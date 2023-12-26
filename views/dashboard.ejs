@@ -1,5 +1,5 @@
 <%-include('layouts/header.ejs')%>
-<div style="margin-left: 250px;">
+<div style="margin-left: 250px">
 <!-- <h2 class="mb-4">Hii, <b><%=user.username%></b></h2> -->
 <div class="row" style="margin-top: -30px;">
     <div class="col-md-3">
@@ -11,8 +11,8 @@
                             <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>" data-status="<%=user.is_online%>"
                                 style="background: #eee;"
                                 >
-                                <img src="<%=user.image%>" width="40px" height="40px" style="border-radius: 50%;">
-                                <%=user.username%>
+                                <img src="<%=user.image%>" width="40px" height="40px" style="border-radius: 50%;object-fit:fill;">
+                                <a style="font-size: 17px;margin-left: 7px;"><%=user.username%></a>
                                 <%if(user.is_online==='1'){%>
                                     <sup class="online-status" id="<%=user._id%>-status">Online</sup>
                                 <%} else{%>
