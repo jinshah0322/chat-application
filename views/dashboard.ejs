@@ -28,6 +28,8 @@
                                     <sup class="offline-status" id="<%=user._id%>-status">Offline</sup>
                                 <%}%>
                             </li>
+                           
+                      
                             <%
                         });
                     }
@@ -38,11 +40,13 @@
             <h1 class="start-head" style="text-align: center; margin-top: 35%; margin-left: -35%;"></h1>
             <div class="chat-section">
                 <div class="chat-header"></div>
-                <div id="chat-container"></div>
-                <form action="" id="chat-form" style="width: 105%; margin-top: 10px">
+                <div style="position: fixed;width: 55%;">
+                <div id="chat-container" style=""></div>
+                <form action="" id="chat-form" style="width: 105%; margin-top: 10px;">
                     <input type="text" name="message" style="padding: 6px; outline: none;" placeholder="Enter Message" id="message" class="border" autocomplete="off" required>
                     <input type="submit" value="Send Message" class="btn btn-primary">
                 </form>
+                </div>
             </div>
         </div>
     </div>
