@@ -8,7 +8,7 @@
                 if(users.length>0) {
                     users.forEach(user =>{
                         %>
-                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>"
+                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>" data-image="<%=user.image%>" data-name="<%=user.username%>" data-status="<%=user.is_online%>"
                                 style="background: #eee;"
                                 >
                                 <img src="<%=user.image%>" width="40px" height="40px">
@@ -35,7 +35,7 @@
                 
             </div>
             <form action="" id="chat-form" style="width: 105%; margin-top: 10px">
-                <input type="text" name="message" style="padding: 6px;" placeholder="Enter Message" id="message" class="border" autocomplete="off" required>
+                <input type="text" name="message" style="padding: 6px;outline: none;" placeholder="Enter Message" id="message" class="border" autocomplete="off" required>
                 <input type="submit" value="Send Message" class="btn btn-primary">
             </form>
         </div>
@@ -59,11 +59,19 @@
             var receiver_id = $(this).attr('data-id')
             var receiver_name= $(this).attr('data-name')
             var receiver_image= $(this).attr('data-image')
+            var receiver_status= $(this).attr('data-status')
+
             let html = `
-            <div style="display: flex; align-items: center;background:#4a4a4a;width:105%;padding:10px">
-                <img src="${receiver_image}" width="50px" height="50px" style="margin-left:15px">
-                <h5 style="margin-left:10px;color:white;margin-top:5px">${receiver_name}</h5>
-            </div>
+            <div style="align-items: center; background: #4a4a4a; width: 105%; padding: 10px;">
+    <div style="display: flex;">
+        <img src="${receiver_image}" width="50px" height="50px" style="margin-left: 15px;">
+        <div style="margin-left: 10px; color: white;">
+            <h5 style="margin-top: 5px;color:white">${receiver_name}</h5>
+            <h1 style="font-size: 12px; margin-top: -4px;color:white;">${receiver_status == 1 ? "Online" : "Offline"}</h1>
+        </div>
+    </div>
+</div>
+
 
             `
             $('.chat-header').html(html)
