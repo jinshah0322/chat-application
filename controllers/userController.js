@@ -132,7 +132,10 @@ const reqsent = async(req,res)=>{
         const currentID = req.session.user._id
         users = users.filter(item=>item._id.toString()!==currentID)
         var reqsentid = await User.find({_id:currentID},{requestsSent:1,_id:0})
-        var reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
+        reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
+        users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
+        reqsentid = await User.find({_id:currentID},{friends:1,_id:0})
+        reqsentid = reqsentid.map(doc => doc.friends).flat();
         users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
         res.render('requestsent', { users, searchTerm });
     } catch(error){
