@@ -27,17 +27,14 @@
         <h1 class="start-head" style="text-align: center;margin-top: 18%;margin-left: -30%;"></h1>
         <div class="chat-section">
             <div class="chat-header">
-                    
+                
             </div>
             <div id="chat-container" >
                 
             </div>
             <form action="" id="chat-form">
-                <input type="text" name="message" placeholder="Enter Message" id="message" class="border" 
-                style="height: 38px;"
-                required>
-                <button type="submit" class="btn btn-primary">Send</button>
-
+                <input type="text" name="message" placeholder="Enter Message" id="message" class="border" required>
+                <input type="submit" value="Send Message" class="btn btn-primary">
             </form>
         </div>
     </div>
@@ -57,9 +54,16 @@
 
     $(document).ready(function(){
         $('.user-list').click(function(){
-            var userId = $(this).attr('data-id')
-            
-            receiver_id = userId
+            var receiver_id = $(this).attr('data-id')
+            var receiver_name= $(this).attr('data-name')
+            var receiver_image= $(this).attr('data-image')
+            let html = `
+                <div>
+                    <h5>${receiver_name}</h5>
+                    <img src="${receiver_image}" width="20px" height="20px">
+                </div>
+            `
+            $('.chat-header').html(html)
             $('.start-head').hide()
             $('.chat-section').show()
 
