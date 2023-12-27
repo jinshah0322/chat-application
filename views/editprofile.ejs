@@ -55,7 +55,7 @@
             width: 100%;
         }
 
-        button:hover {
+        .btn:hover {
             color: #fff !important;
         }
 
@@ -94,27 +94,26 @@
                 <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*" onchange="displayImage(this);">
             </div>
 
-            <div class="profile-info">
-                        
+            <div class="profile-info">              
                 <div style="display: flex;">
                     <form action="" method="post">
                         <table class="table table-borderless">
                             <tr>
                                 <td class="heading">Username </td>
                                 <td>
-                                    <input type="text" class="intput-field form-control" name="username" value="<%=user.username%>" important>
+                                    <input type="text" class="intput-field form-control" name="username" id="usernameInput" value="<%=user.username%>">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="heading">Email </td>
-                                <td><input type="email" class="intput-field form-control" name="email" value="<%=user.email%>" important></td>
+                                <td><input type="email" class="intput-field form-control" name="email" id="emailInput" value="<%=user.email%>"></td>
                             </tr>
                             <tr>
                                 <td class="heading">Mobile </td>
-                                <td> <input type="text" class="intput-field form-control" name="mobile" value="<%=user.mobile%>" important></td>
+                                <td> <input type="text" class="intput-field form-control" name="mobile" id="mobileInput" value="<%=user.mobile%>"></td>
                             </tr>
                             <tr>
-                                <td colspan="2"> <input type="submit" class="btn btn-bootstrap" value="Update"></td>
+                                <td colspan="2"> <input type="submit" class="btn btn-bootstrap" value="Update" id="updateButton" disabled></td>
                             </tr>
                         </table>
                     </form>
@@ -123,23 +122,59 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
+        $(document).ready(function() {
+            // Save initial values on page load
+            var initialValues = {
+                username: "<%=user.username%>",
+                email: "<%=user.email%>",
+                mobile: "<%=user.mobile%>"
+            };
+
+            // Check for changes in input fields
+            $('#usernameInput, #emailInput, #mobileInput').on('input', function() {
+                enableUpdateButton();
+            });
+
+            // Check for changes when the file input changes
+            $('#fileInput').on('change', function() {
+                displayImage(this);
+                enableUpdateButton();
+            });
+
+            // Enable or disable the update button based on changes
+            function enableUpdateButton() {
+                var updateButton = $('#updateButton');
+                var usernameInput = $('#usernameInput');
+                var emailInput = $('#emailInput');
+                var mobileInput = $('#mobileInput');
+
+                // Enable the button if any of the input values change
+                if (
+                    usernameInput.val() !== initialValues.username ||
+                    emailInput.val() !== initialValues.email ||
+                    mobileInput.val() !== initialValues.mobile
+                ) {
+                    updateButton.prop('disabled', false);
+                } else {
+                    updateButton.prop('disabled', true);
+                }
+            }
+        });
+
         function displayImage(input) {
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
-
                 reader.onload = function (e) {
-                    document.querySelector('.profile-image-container img').src = e.target.result;
+                    $('.profile-image-container img').attr('src', e.target.result);
+                    localStorage.setItem('newImagePath', e.target.result);
                 };
-
                 reader.readAsDataURL(input.files[0]);
             }
         }
     </script>
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <%- include('layouts/footer.ejs') %>
 </body>
