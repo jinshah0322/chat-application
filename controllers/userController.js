@@ -302,6 +302,9 @@ const editProfile = async(req,res)=>{
         const {username,email,mobile} = req.body
         const userId = req.session.user._id
         const user = await User.findOne({_id:userId})
+        if(username == ''){
+            return res.json({render: "/editprofile",message:'Username can not be empty'})
+        }
         if(username){
             var usernameupdate = User.updateOne({_id:userId},{username:username})
         }
