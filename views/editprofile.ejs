@@ -91,7 +91,7 @@
         <div class="profile-container">
             <div class="profile-image-container" onclick="document.getElementById('fileInput').click();">
                 <img src="<%= user.image %>" alt="Profile Image">
-                <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*" >
+                <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*"  onchange="displayImage(this);">
             </div>
 
             <div class="profile-info">              
@@ -124,7 +124,6 @@
 
     <script>
         $(document).ready(function() {
-            // Save initial values on page load
             var initialValues = {
                 username: "<%=user.username%>",
                 email: "<%=user.email%>",
@@ -209,6 +208,17 @@
                     console.error(error);
                 }
             });
+        }
+
+        function displayImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.profile-image-container img').attr('src', e.target.result);
+                    localStorage.setItem('newImagePath', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
     </script>    
 
