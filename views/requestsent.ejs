@@ -1,0 +1,121 @@
+<%- include('layouts/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Send Request - Chat application</title>
+
+    <!-- Add your head content here -->
+    <style>
+        form {
+            display: flex !important;
+        }
+
+        body {
+            overflow-x: hidden !important;
+        }
+
+        .data{
+            margin-left: 200px !important;
+        }
+        .data ul {
+            display: flex;
+            flex-wrap: wrap;
+            margin-left: -15px; /* Counteract default list-style padding */
+        }
+
+        .data li {
+            width: calc(33.33% - 30px); /* Three items per row with 30px gap */
+        
+            height:20vw !important;
+            list-style: none !important;
+            padding: 20px !important;
+            margin-left: 30px !important;
+            margin-top: 30px !important;
+        }
+      
+        
+
+        .image-user {
+            border-radius: 50% !important;
+        }
+
+        .data .btn-primary {
+            font-size: 15px !important;
+            margin-top: 13px;
+            padding: 5px 17px;
+            border-radius: 7px;
+        }
+
+        h2 {
+            margin-left: 270px;
+            margin-top: 30px;
+        }
+
+        h3 {
+           text-align: center;
+            margin-top: 30vh;
+            margin-left: 10vw;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Add your body content here -->
+    <div class="container" style="margin-left: 250px; margin-top: -30px;">
+        <h1 class="font-weight-bold">Send Request to your friend</h1><br>
+
+        <div class="input-group">
+            <form action="" method="post">
+                <input type="search" class="form-control border rounded" placeholder="Search" aria-label="Search"
+                    aria-describedby="search-addon" name="searchTerm" required style="width: 400px;" />
+                <input type="submit" class="btn btn-outline-primary" data-mdb-ripple-init value="search"
+                    style="margin-left: 10px;">
+            </form>
+        </div>
+    </div>
+
+    <% if (typeof users !== 'undefined' && users.length > 0) { %>
+    <h2>Matching result for '<%= searchTerm %>'</h2>
+    <div class="data">
+        <ul>
+            <% users.forEach((user, index) => { %>
+                <li class="rounded list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
+                    <img src="<%=user.image%>" width="90px" height="90px"  class="image-user">
+                    <br><br>
+                    <b>Name:</b> <%=user.username%><br>
+                    <b>Mobile:</b> <%=user.mobile%><br>
+                    <b>Email:</b> <%=user.email%><br>
+                    <b>Friends: </b><%=user.friends.length%><br>
+                    <button class="btn-primary" onclick="sendRequest('<%= user._id %>')">Send Request</button>
+
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+    <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
+    <h3>No results found for '<%= searchTerm %>'</h3>
+    <% } %>
+
+    <script>
+        function sendRequest(userId) {
+            fetch('/send-request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+    </body>
+</html>
+
+<%- include('layouts/footer.ejs') %>

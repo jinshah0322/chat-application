@@ -1,0 +1,65 @@
+<%- include('layouts/adminHeader.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Chat Application</title>
+  <style>
+    .search-container {
+      float: right;
+      margin-top: 20px;
+      margin-right: 20px;
+    }
+
+    .search-input {
+      padding: 5px;
+      width: 200px;
+    }
+
+    .search-button {
+      padding: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div style="margin-left: 250px;">
+    <div style="display: flex;justify-content: space-between;">
+    <h1 style="font-weight: 700;">Admin Dashboard</h1>
+
+    <div class="search-container">
+      <div class="input-group">
+        <form action="" method="post" style="display: flex;">
+            <input type="search" class="border rounded" placeholder="Search Activity Type" aria-label="Search"
+                aria-describedby="search-addon" name="searchTerm" required style="width: 400px;" />
+            <input type="submit" class="btn btn-outline-primary" data-mdb-ripple-init value="Search"
+                style="margin-left: 10px;">
+        </form>
+    </div>
+    </div>
+
+    </div><br>
+    <table border="1" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Sr. Number</th>
+          <th>Activity Type</th>
+          <th>User ID</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% activities.forEach((activity, index) => { %>
+          <tr>
+            <td style="text-align: center;"><%= index + 1 %></td>
+            <td><%= activity.activityType %></td>
+            <td><%= activity.userId %></td>
+            <td><%= activity.timestamp %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

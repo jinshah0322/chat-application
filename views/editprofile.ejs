@@ -1,0 +1,234 @@
+<%- include('layouts/header.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Chat application</title>
+
+    <script>
+        var error_msg = localStorage.getItem('profile_error')
+    </script>
+    <style>
+        .profile-container {
+            background-color: #C6C8CA;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            border-radius: 8px;
+            width: 800px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+        }
+
+        body {
+            color: #000 !important;
+        }
+
+        .profile-info {
+            width: 100%;
+            margin-left: 20px;
+            text-align: left;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+        }
+
+        .btn-bootstrap {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .btn:hover {
+            color: #fff !important;
+        }
+
+        .heading,
+        input {
+            font-size: 17px !important;
+        }
+
+        .intput-field {
+            width: 300px;
+        }
+
+        td {
+            vertical-align: middle !important;
+            font-weight: 700;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .profile-image-container {
+            cursor: pointer;
+        } 
+    </style>
+</head>
+<body>
+    <div style="margin-left: 250px;">
+        <h1 style="margin-top: -30px;font-weight: 700;color: #000;">Edit Profile</h1><br>
+        <% if (typeof message !== "undefined") { %>
+            <p style="color: red;text-align: center;"><%=error_message%></p>
+        <% } %>     
+        <div class="profile-container">
+            <div class="profile-image-container" onclick="document.getElementById('fileInput').click();">
+                <img src="<%= user.image %>" alt="Profile Image">
+                <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*"  onchange="displayImage(this);">
+            </div>
+
+            <div class="profile-info">              
+                <div style="display: flex;">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="heading">Username </td>
+                            <td>
+                                <input type="text" class="intput-field form-control" name="username" id="usernameInput" value="<%=user.username%>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="heading">Email </td>
+                            <td><input type="email" class="intput-field form-control" name="email" id="emailInput" value="<%=user.email%>"></td>
+                        </tr>
+                        <tr>
+                            <td class="heading">Mobile </td>
+                            <td> <input type="text" class="intput-field form-control" name="mobile" id="mobileInput" value="<%=user.mobile%>"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"> <button class="btn btn-bootstrap" id="updateButton" disabled onclick="submitForm()">Update</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var initialValues = {
+                username: "<%=user.username%>",
+                email: "<%=user.email%>",
+                mobile: "<%=user.mobile%>"
+            };
+    
+            // Check for changes in input fields
+            $('#usernameInput, #emailInput, #mobileInput').on('input', function() {
+                enableUpdateButton();
+            });
+    
+            // Check for changes when the file input changes
+            $('#fileInput').on('change', function() {
+                enableUpdateButton();
+            });
+    
+            // Enable or disable the update button based on changes
+            function enableUpdateButton() {
+                var updateButton = $('#updateButton');
+                var usernameInput = $('#usernameInput');
+                var emailInput = $('#emailInput');
+                var mobileInput = $('#mobileInput');
+                var fileInput = $('#fileInput');
+    
+                // Enable the button if any of the input values change
+                if (
+                    usernameInput.val() !== initialValues.username ||
+                    emailInput.val() !== initialValues.email ||
+                    mobileInput.val() !== initialValues.mobile ||
+                    fileInput[0].files.length > 0
+                ) {
+                    updateButton.prop('disabled', false);
+                } else {
+                    updateButton.prop('disabled', true);
+                }
+            }
+        });
+    
+        function submitForm() {
+            // Prepare data to send to the server using FormData
+            var formData = new FormData();
+            var usernameInput = $('#usernameInput');
+            var emailInput = $('#emailInput');
+            var mobileInput = $('#mobileInput');
+            var fileInput = $('#fileInput')[0].files[0];
+    
+            // Check if each field has changed and include in formData
+            if (usernameInput.val() !== '<%=user.username%>') {
+                formData.append('username', usernameInput.val());
+            }
+    
+            if (emailInput.val() !== '<%=user.email%>') {
+                formData.append('email', emailInput.val());
+            }
+    
+            if (mobileInput.val() !== '<%=user.mobile%>') {
+                formData.append('mobile', mobileInput.val());
+            }
+    
+            // Add the file to the formData if it exists
+            if (fileInput) {
+                formData.append('profileImage', fileInput);
+            }
+    
+            // Make an AJAX request to submit the form
+            $.ajax({
+                url: '/editprofile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
+                    if (response.render) {
+                        localStorage.setItem('profile_error',response.message)
+                        var message_error = response.message
+                        window.location.reload()
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        function displayImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('.profile-image-container img').attr('src', e.target.result);
+                    localStorage.setItem('newImagePath', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>    
+
+    <%- include('layouts/footer.ejs') %>
+</body>
+</html>

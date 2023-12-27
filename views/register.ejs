@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Chat application</title>
+    <!-- Include Bootstrap stylesheet -->
+    <link rel="icon" href=
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/A_logo_with_a_blue_paper_airplane.svg/1024px-A_logo_with_a_blue_paper_airplane.svg.png"
+              type="image/x-icon">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);        
+            border-radius: 8px;
+            width: 600px; /* Adjusted width to 400px */
+            text-align: center;
+            padding: 40px !important;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        input[type="file"] {
+            margin-top: 5px;
+        }
+
+        /* Use Bootstrap styles for the button */
+        .btn-bootstrap {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .btn-bootstrap:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            text-decoration: none;
+            color: #3498db;
+            margin-top: 10px;
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #2c3e50;
+        }
+
+        p {
+            color: red;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Register</h1><br>
+        <% if (typeof message !== "undefined") { %>
+            <p style="color: red;"><%= message %></p>
+        <% } %>
+        <form action="" method="POST" enctype="multipart/form-data">
+            <input type="text" name="username" placeholder="Enter your username" required>
+            <input type="email" name="email" placeholder="Enter your email" required>
+            <input type="text" name="mobile" placeholder="Enter your mobile number" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
+            <input type="file" name="image"accept="image/*" required>
+            <!-- Apply Bootstrap styles to the button -->
+            <button type="submit" class="btn btn-bootstrap">Register</button>
+            <a href="/">Login</a>
+        </form>
+    </div>
+
+    <!-- Include Bootstrap JavaScript and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

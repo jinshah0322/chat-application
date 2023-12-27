@@ -1,0 +1,166 @@
+<%-include('layouts/header.ejs')%>
+<title>Dashboard - Chat application</title>
+<style>
+    .selected {
+        background-color: #C6C8CA !important;
+        color: #fff;
+    }
+</style>
+<div style="margin-left: 250px">
+    <div class="row" style="margin-top: -30px;">
+        <div class="col-md-3">
+            <ul class="list-group">
+                <% 
+                    if(users.length > 0) {
+                        users.forEach(user => {
+                            %>
+                            <li class="list-group-item list-group-item-dark cursor-pointer user-list" 
+                                data-id="<%=user._id%>" 
+                                data-image="<%=user.image%>" 
+                                data-name="<%=user.username%>" 
+                                data-status="<%=user.is_online%>"
+                                style="background: #eee;"
+                            >
+                                <img src="<%=user.image%>" width="40px" height="40px" style="border-radius: 50%;object-fit: fill;">
+                                <a style="font-size: 17px; margin-left: 7px;"><%=user.username%></a>
+                                <%if(user.is_online==='1'){%>
+                                    <sup class="online-status" id="<%=user._id%>-status">Online</sup>
+                                <%} else{%>
+                                    <sup class="offline-status" id="<%=user._id%>-status">Offline</sup>
+                                <%}%>
+                            </li>
+                           
+                      
+                            <%
+                        });
+                    }
+                %>
+            </ul>
+        </div>
+        <div class="col-md-9">
+            <h1 class="start-head" style="text-align: center; margin-top: 35%; margin-left: -35%;"></h1>
+            <div class="chat-section">
+                <div class="chat-header"></div>
+                <div style="position: fixed;width: 55%;">
+                <div id="chat-container" style=""></div>
+                <form action="" id="chat-form" style="width: 105%; margin-top: 10px;">
+                    <input type="text" name="message" style="padding: 6px; outline: none;" placeholder="Enter Message" id="message" class="border" autocomplete="off" required>
+                    <input type="submit" value="Send Message" class="btn btn-primary">
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var sender_id = '<%=user._id%>'
+    var receiver_id;
+    var socket = io('/user-namespace',{
+        auth:{
+            token:'<%=user._id%>'
+        }
+    })
+    var friends = "<%=user.friends%>"
+    if(friends.length == 0){
+        $('.start-head').text('Add friends to start a chat')
+    }
+
+    $(document).ready(function(){
+        $('.user-list').click(function(){
+            // Remove the existing 'selected' class
+            $('.user-list').removeClass('selected');
+            
+            var userId = $(this).attr('data-id')
+            receiver_id = userId
+            
+            // Add 'selected' class to the clicked item
+            $(this).addClass('selected');
+
+            $('.start-head').hide()
+            $('.chat-section').show()
+
+            socket.emit('existsChat',{sender_id: sender_id, receiver_id: receiver_id})
+        })
+    })
+    //update user online status
+    socket.on("getOnlineUser",(data)=>{
+        $('#'+data.userId+'-status').text("Online")
+        $('#'+data.userId+'-status').removeClass()
+        $('#'+data.userId+'-status').addClass('online-status')
+    })
+
+    //update user offline status
+    socket.on("getOfflineUser",(data)=>{
+        $('#'+data.userId+"-status").text("Offline")
+        $('#'+data.userId+"-status").removeClass()
+        $('#'+data.userId+"-status").addClass("offline-status")
+    })
+
+    //chat save of user
+    $("#chat-form").submit((event)=>{
+        event.preventDefault()  //this will prevent page to refresh on submit
+        var message = $('#message').val()
+        jQuery.ajax({
+            url: "/save-chat",
+            type: "post",
+            data: { sender_id: sender_id, receiver_id: receiver_id, message: message },
+            success: function(response) {
+                if (response.success) {
+                    $('#message').val('');
+                    let chat = response.data.message;
+                    let html = `
+                        <div class="current-user-chat">
+                            <h5 class="chat-user">${chat}</h5>
+                        </div>
+                    `;
+                    $("#chat-container").append(html);
+                    socket.emit('newChat',response.data)
+                    scrollChat()
+                } else {
+                    alert(response.message);
+                }
+            }
+        });
+    })
+
+    socket.on("loadNewChat",function(data){
+        if(sender_id === data.receiver_id && receiver_id === data.sender_id){
+            let html = `
+                <div class="distance-user-chat">
+                    <h5 class="chat-user">${data.message}</h5>
+                </div>
+            `
+            $('#chat-container').append(html)
+        }
+        scrollChat()
+    })
+
+    //load old chats
+    socket.on("loadChats",function(data){
+        $("#chat-container").html('')
+        var chats = data.chats
+        var html = ''
+        chats.forEach(chat => {
+            let addClass = ''
+            if(chat.sender_id == sender_id){
+                addClass = 'current-user-chat'
+            } else{
+                addClass = 'distance-user-chat'
+            }
+            html+=`
+            <div class="${addClass}">
+                    <h5 class="chat-user">${chat.message}</h5>
+            </div>
+            `
+        });
+        $('#chat-container').append(html)
+        scrollChat()
+    })
+
+    function scrollChat(){
+        $("#chat-container").animate({
+            scrollTop:$("#chat-container").offset().top + $("#chat-container")[0].scrollHeight
+        },0)
+    }
+</script>   
+<%-include('layouts/footer.ejs')%>

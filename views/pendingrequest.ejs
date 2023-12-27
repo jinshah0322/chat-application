@@ -1,0 +1,142 @@
+<%-include('layouts/header.ejs')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pending Request - Chat application</title>
+    <style>
+         .pending {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-card {
+            width: calc(33.33% - 20px); /* Three cards in a row with 20px gap */
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover{
+            color: #fff !important;
+        }
+
+        .user-card img {
+            border-radius: 50%;
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .user-card button {
+            width: 100%;
+            background-color: #28a745;
+            color: #fff;
+            margin-top: 10px;
+            border: none;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-accept {
+            margin-top: 10px;
+            background-color: #28a745; /* Green color for accept button */
+            color: #fff;
+        }
+
+        .btn-reject {
+            margin-top: 10px;
+            background-color: #dc3545; /* Red color for reject button */
+            color: #fff;
+        }   
+
+        .image-user{
+            border-radius: 50%;
+        }
+
+        .main-pending h1 {
+            margin-top: -30px !important;
+            font-weight: 700;
+            margin-left: 23px !important;
+        }
+        .pending li {
+            width: 22vw !important;
+            height:20vw !important;
+            list-style: none !important;
+            padding: 20px !important;
+            margin-left: 30px !important;
+            margin-top: 30px !important;
+        }
+      
+    </style>
+    </style>
+</head>
+<body>
+    <div class="main-pending" style="margin-left: 250px;">
+        <h1>Pending Requests</h1>
+        <div class="pending">
+            <% if (typeof users !== 'undefined' && users.length > 0) { %>
+                <% users.forEach((user, index) => { %>
+                    <li class="rounded list-group-item-dark cursor-pointer user-list" data-id="<%=user._id%>">
+                        <img src="<%=user.image%>" width="90px" height="90px"  class="image-user">
+                        <br><br>
+                        <b>Name:</b> <%=user.username%><br>
+                        <b>Mobile:</b> <%=user.mobile%><br>
+                        <b>Email:</b> <%=user.email%><br>
+                        <b>Friends: </b><%=user.friends.length%><br>
+                        <button class="btn btn-accept" onclick="acceptRequest('<%= user._id %>')">Accept</button>
+                        <button class="btn btn-reject" onclick="rejectRequest('<%= user._id %>')">Reject</button>
+                    
+                    </li>
+                <% }); %>
+            <% } else if (typeof users !== 'undefined' && users.length === 0) { %>
+                <h3 style="margin-left: 350px; font-weight: 400; margin-top: 35vh; color: black;">There are no pending requests</h3>
+            <% } %>
+        </div>
+    </div>
+
+    <script>
+        function acceptRequest(userId) {
+            fetch('/pendingrequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, accept: true }),
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function rejectRequest(userId) {
+            fetch('/pendingrequest', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, accept: false }),
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+
+    <%-include('layouts/footer.ejs')%>
+</body>
+</html>

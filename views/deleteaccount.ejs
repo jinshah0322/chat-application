@@ -1,0 +1,74 @@
+<%- include('layouts/header.ejs') %>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Delete Account - Chat application</title>
+        <style>
+            .login-container {
+                background-color: #fff;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                border-radius: 8px;
+                width: 600px;
+                /* Adjusted width to 400px */
+                text-align: center;
+            }
+
+            h1 {
+                color: #333;
+            }
+
+            form {
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* input {
+                padding: 10px;
+                margin-bottom: 10px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-sizing: border-box;
+                width: 100%;
+            } */
+
+            .login-container {
+                margin-left: 30vw !important;
+                margin-top: 23vh !important;
+                padding: 50px !important;
+            }
+
+
+
+
+         
+        </style>
+    </head>
+
+    <body style="background: #eee;">
+        <div>
+            <div class="login-container">
+                <% if (typeof message !=="undefined" ) { %>
+                    <p style="color: red;">
+                        <%= message %>
+                    </p>
+                    <% } %>
+                        <form action="" method="POST">
+                            <h3>Are you sure ?</h3><br>
+                            <div style="display: flex;justify-content: space-between;">
+                                <input type="submit" value="Yes, Delete my account" class="btn btn-danger w-50">
+                                <a class="btn btn-primary w-50 ml-2" href="/dashboard">No, Return to dashboard</a>
+                            </div>
+
+                        </form>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    </body>
+
+    </html>

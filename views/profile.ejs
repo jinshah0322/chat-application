@@ -1,0 +1,134 @@
+<%-include('layouts/header.ejs')%>
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Profile - Chat application</title>
+        <!-- Include Bootstrap stylesheet -->
+        <style>
+            .profile-container {
+                background-color: #C6C8CA;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 35px;
+                border-radius: 8px;
+                width: 700px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+            }
+
+            body {
+                color: #000 !important;
+            }
+
+            .profile-info {
+                width: 100%;
+                margin-left: 20px;
+                text-align: left;
+            }
+
+            h1 {
+                color: #333;
+            }
+
+            .profile-info p {
+                margin: 10px 0;
+                font-size: 17px;
+
+            }
+
+            img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 30px;
+            }
+
+            .btn-bootstrap {
+                background-color: #007bff;
+                color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                padding: 10px;
+                border: none;
+                border-radius: 4px;
+                box-sizing: border-box;
+                width: 100%;
+            }
+
+            button:hover {
+                color: #fff !important;
+            }
+            
+        td:nth-child(1) {
+            vertical-align: middle !important;
+            font-weight: 700;
+        }
+        td:nth-child(2){
+           color: #000 !important;
+        }
+        td{
+            font-size: 17px;
+            width: 200px !important ;
+        }            
+        </style>
+    </head>
+
+    <body>
+        <div style="margin-left: 250px ;">
+            <h1 style="margin-top: -30px;font-weight: 700;color: #000;">User Profile</h1><br>
+            <div class="profile-container">
+                <div>
+                    <img src="<%=user.image%>" alt="Profile Image">
+                </div>
+                <div class="profile-info">
+
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>Username</td>
+                            <td> <%=user.username%></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td><%=user.email%></td>
+                        </tr>
+                        <tr>
+                            <td>Mobile</td>
+                            <td> <%=user.mobile%></td>
+                        </tr>
+                        <tr>
+                            <td>Friends</td>
+                            <td> <%=user.friends.length%></td>
+                        </tr>
+                        <tr>
+                            <td>                        <button class="btn btn-bootstrap" onclick="redirectToEditProfile()">Edit Profile</button>
+                            </td>
+                            <td><button class="btn btn-bootstrap" style="margin-left: 10px;"
+                                onclick="redirectToChangePassword()">Change Password</button></td>
+                        </tr>
+                    </table>
+
+                  
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function redirectToEditProfile() {
+                window.location.href = '/editprofile';
+            }
+
+            function redirectToChangePassword() {
+                window.location.href = '/changepassword';
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    </body>
+
+    </html>
+    <%-include('layouts/footer.ejs')%>
