@@ -30,7 +30,7 @@ router.route("/pendingrequest").get(isLogin,pendingrequest).post(isLogin,finishr
 router.route("/forgot-password").get(isLogout,loadForgotPassword).post(isLogout,forgotPassword)
 router.route("/changepassword").get(isLogin,loadChangePassword).post(isLogin,changePassword)
 router.route("/editprofile").get(isLogin,loadEditProfile).post(isLogin,upload.single('profileImage'),editProfile)
-router.route("/deleteaccount").get(isLogin,loadDeleteaccount).get(isLogin,deleteaccount)
+router.route("/deleteaccount").get(isLogin,loadDeleteaccount).post(isLogin,deleteaccount)
 
 router.route('/save-chat').post(saveChat)
 

@@ -369,7 +369,7 @@ const editProfile = async(req,res)=>{
 
 const loadDeleteaccount = async(req,res)=> {
     try{
-
+        res.render("deleteaccount")
     } catch(error){
         console.log(error.message);
     }
@@ -377,7 +377,10 @@ const loadDeleteaccount = async(req,res)=> {
 
 const deleteaccount = async(req,res)=>{
     try{
-
+        const userId = req.session.user._id
+        await User.updateOne({},{$pull:{friends:userId}})
+        await User.deleteOne({_id:userId})
+        router.redirect("/logout")
     } catch(error){
         
     }
