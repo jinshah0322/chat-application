@@ -126,36 +126,31 @@
 
     <script>
         $(document).ready(function() {
-            // Save initial values on page load
             var initialValues = {
                 username: "<%=user.username%>",
                 email: "<%=user.email%>",
                 mobile: "<%=user.mobile%>"
             };
 
-            // Check for changes in input fields
             $('#usernameInput, #emailInput, #mobileInput').on('input', function() {
                 enableUpdateButton();
             });
 
-            // Check for changes when the file input changes
             $('#fileInput').on('change', function() {
                 displayImage(this);
                 enableUpdateButton();
             });
 
-            // Enable or disable the update button based on changes
             function enableUpdateButton() {
                 var updateButton = $('#updateButton');
                 var usernameInput = $('#usernameInput');
                 var emailInput = $('#emailInput');
                 var mobileInput = $('#mobileInput');
 
-                // Enable the button if any of the input values change
                 if (
-                    usernameInput.val() !== initialValues.username ||
-                    emailInput.val() !== initialValues.email ||
-                    mobileInput.val() !== initialValues.mobile
+                    (usernameInput.val() !== initialValues.username && usernameInput.val() !== "") ||
+                    (emailInput.val() !== initialValues.email && emailInput.val() !== "") ||
+                    (mobileInput.val() !== initialValues.mobile && mobileInput.val() !== "")
                 ) {
                     updateButton.prop('disabled', false);
                 } else {
