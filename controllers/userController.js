@@ -3,6 +3,7 @@ const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 const mongoose = require("mongoose")
 const Chat = require("../models/chatModel")
+
 const registerLoad = async (req,res)=>{
     try{
         res.render("register")
@@ -288,7 +289,8 @@ const changePassword = async(req,res)=>{
 
 const loadEditProfile = async(req,res)=>{
     try{
-        const user = req.session.user
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
         res.render("editprofile",{user:user})
     }catch(error){
         console.log(error.message);
@@ -297,8 +299,66 @@ const loadEditProfile = async(req,res)=>{
 
 const editProfile = async(req,res)=>{
     try{
-        console.log(req.body);
-        res.redirect("/profile")
+        const {username,email,mobile} = req.body
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
+        if(username){
+            var usernameupdate = User.updateOne({_id:userId},{username:username})
+        }
+        if (req.file) {
+            var userimage = User.updateOne({_id:userId},{image:"images/"+req.file.filename})
+        }
+        if(mobile){
+            if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                const allNumber = await User.find({mobile:mobile})
+                if(allNumber.length == 0){
+                    var numberupdate = User.updateOne({_id:userId},{mobile:mobile})
+                } else{
+                    res.josn({redirectUrl: "/editprofile",message:'User with same Mobile Number already exist'})
+                }
+            } else{
+                res.josn({redirectUrl: "/editprofile",message:'Enter Valid moile number'})
+            }
+        }
+        if(email){
+            if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
+                const allEmail = await User.find({email:email})
+                if(allEmail.length == 0){
+                    var emailupdate = User.updateOne({_id:userId},{email:email})
+                } else{
+                    res.josn({redirectUrl: "/editprofile",message:'User with same email address already exist'})
+                }   
+            } else{
+                res.josn({redirectUrl: "/editprofile",message:'Enter Valid email address'})
+            }
+        }
+        await userimage
+        await usernameupdate
+        await numberupdate
+        await emailupdate
+        const oldEmail = user.email
+        const updatedUser = await User.updateOne({email:oldEmail},{username,email,mobile})
+        const html = `
+                <h2>Your Profile has been Updatedn </h2>
+                <p>Dear ${username},</p>
+                <p>We want to inform you that your profile on our application has been successfully updated. Your changes have been saved, and your profile now reflects the updated information.If you have any further updates or need assistance, feel free to log in to your account and make the necessary changes. If you have any questions, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
+                <p>Best regards,<br>[Jinay Shah]</p>
+            `
+        var data = {
+            to: email,
+            text: `Hey ${username}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail(data)
+        data = {
+            to: oldEmail,
+            text: `Hey ${username}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail()
+        res.json({ redirectUrl: "/profile" });
     }catch(error){
         console.log(error);
     }
