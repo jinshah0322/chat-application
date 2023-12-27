@@ -367,6 +367,22 @@ const editProfile = async(req,res)=>{
     }
 }
 
+const loadDeleteaccount = async(req,res)=> {
+    try{
+        
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+const deleteaccount = async(req,res)=>{
+    try{
+
+    } catch(error){
+        
+    }
+}
+
 module.exports = {
     registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword,
     loadEditProfile,editProfile
