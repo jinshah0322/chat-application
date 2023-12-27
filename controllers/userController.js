@@ -380,7 +380,8 @@ const deleteaccount = async(req,res)=>{
         const userId = req.session.user._id
         await User.updateOne({},{$pull:{friends:userId}})
         await User.deleteOne({_id:userId})
-        router.redirect("/logout")
+        req.session.destroy()
+        res.redirect("/")
     } catch(error){
         
     }
