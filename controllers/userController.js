@@ -314,10 +314,10 @@ const editProfile = async(req,res)=>{
                 if(allNumber.length == 0){
                     var numberupdate = User.updateOne({_id:userId},{mobile:mobile})
                 } else{
-                    res.josn({render: "/editprofile",message:'User with same Mobile Number already exist'})
+                    res.json({render: "/editprofile",message:'User with same Mobile Number already exist'})
                 }
             } else{
-                res.josn({render: "/editprofile",message:'Enter Valid moile number'})
+                res.json({render: "/editprofile",message:'Enter Valid moile number'})
             }
         }
         if(email){
@@ -326,10 +326,10 @@ const editProfile = async(req,res)=>{
                 if(allEmail.length == 0){
                     var emailupdate = User.updateOne({_id:userId},{email:email})
                 } else{
-                    res.josn({render: "/editprofile",message:'User with same email address already exist'})
+                    res.json({render: "/editprofile",message:'User with same email address already exist'})
                 }   
             } else{
-                res.josn({render: "/editprofile",message:'Enter Valid email address'})
+                res.json({render: "/editprofile",message:'Enter Valid email address'})
             }
         }
         await userimage
