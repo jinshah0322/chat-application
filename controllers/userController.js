@@ -461,7 +461,27 @@ const adminDashboard = async (req, res) => {
     }
 };
 
+const adminSearch = async(req,res)=>{
+    try {
+        if (!req.session.user || !req.session.user.isAdmin) {
+            res.redirect('/login'); // Redirect non-admin users to login
+        } else {
+            const {searchTerm} = req.body
+            const activities = await Activity.find({
+                $or:[
+                    {activityType:searchTerm},
+                    {userId:searchTerm},
+                    {timestamp:searchTerm}
+                ]
+            })
+            res.render('adminDashboard', { activities: activities});
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
     registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword,
-    loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard
+    loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard,adminSearch
 }
