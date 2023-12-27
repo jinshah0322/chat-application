@@ -1,0 +1,97 @@
+<%-include('layouts/header.ejs')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Include Bootstrap stylesheet -->
+    <style>
+
+
+        .profile-container {
+            background-color: #C6C8CA;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 35px;
+            border-radius: 8px;
+            width: 700px;         
+            text-align: center;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        body{
+            color: #000 !important;
+        }
+
+        .profile-info {
+            width: 100%;
+            margin-left: 20px;
+            text-align: left;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .profile-info p {
+            margin: 10px 0;
+            font-size: 17px;
+        }
+
+        img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 20px;
+        }
+
+        .btn-bootstrap {
+            /* Use the default Bootstrap color for the button */
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+ 
+
+     button:hover{
+        color: #fff !important;
+     }
+    </style>
+</head>
+<body>
+    <div style="margin-left: 250px ;">
+        <h1 style="margin-top: -30px;font-weight: 700;color: #000;">User Profile</h1><br>
+    <div class="profile-container">
+
+        <img src="<%=user.image%>" alt="Profile Image">
+        <div class="profile-info">
+            
+            <div style="display: flex;">
+                <form action="" method="post">
+                    <input type="text" name="username" value="<%=user.username%>">
+                    <input type="email" name="email" value="<%=user.email%>">
+                    <input type="text" name="mobile" value="<%=user.mobile%>">
+                    <input type="submit" class="btn btn-bootstrap" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+<%-include('layouts/footer.ejs')%>

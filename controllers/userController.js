@@ -286,6 +286,25 @@ const changePassword = async(req,res)=>{
     }
 }
 
+const loadEditProfile = async(req,res)=>{
+    try{
+        const user = req.session.user
+        res.render("editprofile",{user:user})
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const editProfile = async(req,res)=>{
+    try{
+        console.log(req.body);
+        res.redirect("/profile")
+    }catch(error){
+        console.log(error);
+    }
+}
+
 module.exports = {
-    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword
+    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword,
+    loadEditProfile,editProfile
 }
