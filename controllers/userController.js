@@ -297,7 +297,41 @@ const loadEditProfile = async(req,res)=>{
 
 const editProfile = async(req,res)=>{
     try{
-        console.log(req.body);
+        const {username,email,mobile} = req.body
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
+        const existingUserEmail = await User.findOne({ email: email });
+        const existingUserNumber = await User.findOne({ mobile: mobile })
+        if(!existingUserEmail){
+            if(!existingUserNumber){
+                if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
+                    if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                        const oldEmail = user.email
+                        const updatedUser = await User.updateOne({email:oldEmail},{username,email,mobile})
+                        const html = `
+                                <h2>Your Profile has been Updatedn </h2>
+                                <p>Dear ${username},</p>
+                                <p>We want to inform you that your profile on our application has been successfully updated. Your changes have been saved, and your profile now reflects the updated information.If you have any further updates or need assistance, feel free to log in to your account and make the necessary changes. If you have any questions, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
+                                <p>Best regards,<br>[Jinay Shah]</p>
+                            `
+                            var data = {
+                                to: email,
+                                text: `Hey ${username}`,
+                                subject: "Your Profile has been Updated",
+                                html: html
+                            }
+                            sendEmail(data)
+                            data = {
+                                to: oldEmail,
+                                text: `Hey ${username}`,
+                                subject: "Your Profile has been Updated",
+                                html: html
+                            }
+                            sendEmail()
+                    }else{res.render('register',{message:'Enter Valid moile number'})}
+                } else{res.render('register',{message:'Enter Valid email address'})}
+            } else{res.render('editprofile',{message:'User with same Mobile Number already exist'})}
+        } else{res.render('editprofile',{message:'User with same email address already exist'})}
         res.redirect("/profile")
     }catch(error){
         console.log(error);
