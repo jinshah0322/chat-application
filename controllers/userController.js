@@ -3,6 +3,8 @@ const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 const mongoose = require("mongoose")
 const Chat = require("../models/chatModel")
+const Activity = require("../models/activityModel");
+
 
 const registerLoad = async (req,res)=>{
     try{
@@ -45,6 +47,11 @@ const register = async(req,res)=>{
                             }
                             sendEmail(data)
                             await user.save()
+                            const activity = new Activity({
+                                activityType: "userRegistration",
+                                userId: user._id,
+                            });
+                            await activity.save();
                             res.redirect('/')
                         } else{res.render('register',{message:'Enter strong password'})}
                     } else{res.render('register',{message:'Enter Valid moile number'})}
@@ -76,6 +83,11 @@ const login = async(req,res)=>{
                 res.render('login',{ message: "Incorrect Password", success: false})
             } else {
                 req.session.user = user
+                const activity = new Activity({
+                    activityType: "userLogin",
+                    userId: user._id,
+                });
+                await activity.save();
                 res.redirect('/dashboard')
             }
         }
@@ -86,6 +98,11 @@ const login = async(req,res)=>{
 
 const logout = async(req,res)=>{
     try{
+        const activity = new Activity({
+            activityType: "userLogout",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         req.session.destroy()
         res.redirect("/")
     } catch(error){
@@ -149,6 +166,11 @@ const sendrequest = async(req,res)=>{
     const currentId = req.session.user._id
     await User.updateOne({_id:userId},{$push:{requestsReceived:currentId}})
     await User.updateOne({_id:currentId},{$push:{requestsSent:userId}})
+    const activity = new Activity({
+        activityType: "userSentRequest",
+        userId: req.session.user._id, 
+    });
+    await activity.save();
     res.redirect("/dashboard")
 }
 
@@ -172,9 +194,19 @@ const finishrequest = async(req,res)=>{
         await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
         await User.updateOne({_id:currentId},{$push:{friends:userId}})
         await User.updateOne({_id:userId},{$push:{friends:currentId}})
+        const activity = new Activity({
+            activityType: "userAcceptedRequest",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
     } else{
         await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
         await User.updateOne({_id:currentId},{$pull:{requestsReceived:userId}})
+        const activity = new Activity({
+            activityType: "userRejectedRequest",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
     }
     res.redirect('/pendingrequest')
 }
@@ -187,6 +219,11 @@ const saveChat = async (req,res)=>{
             message:req.body.message
         })
         var newChat = await chat.save()
+        const activity = new Activity({
+            activityType: "UserChatting",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         res.status(200).send({success:true,message:"Chat added to db successfully",data:newChat})
     }catch(error){
         res.status(400).send({success:false,message:error.message})
@@ -229,6 +266,11 @@ const forgotPassword = async(req,res)=>{
                 html: html
             }
             sendEmail(data)
+            const activity = new Activity({
+                activityType: "userForgotPassword",
+                userId: req.session.user._id, 
+            });
+            await activity.save();
             res.render("forgotpassword",{message:"Check your email address",success:true})
         } else{
             res.render("forgotpassword",{message:"user not found",success:false})
@@ -276,6 +318,11 @@ const changePassword = async(req,res)=>{
                         html: html
                     }
                     sendEmail(data)
+                    const activity = new Activity({
+                        activityType: "userChangedPassword",
+                        userId: req.session.user._id, 
+                    });
+                    await activity.save();
                     res.redirect('/profile')
                 } else{
                     res.render('changepassword',{message:'Enter strong password'})
@@ -361,6 +408,11 @@ const editProfile = async(req,res)=>{
             html: html
         }
         sendEmail()
+        const activity = new Activity({
+            activityType: "userEditedProfile",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         res.json({ redirectUrl: "/profile" });
     }catch(error){
         console.log(error);
@@ -378,12 +430,18 @@ const loadDeleteaccount = async(req,res)=> {
 const deleteaccount = async(req,res)=>{
     try{
         const userId = req.session.user._id
-        await User.updateOne({},{$pull:{friends:userId}})
+        await User.updateMany({},{$pull:{friends:userId}})
         await User.deleteOne({_id:userId})
+        await Chat.deleteMany({$or:[{sender_id:userId},{receiver_id:userId}]})
+        const activity = new Activity({
+            activityType: "userDeletedProfile",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         req.session.destroy()
         res.redirect("/")
     } catch(error){
-        
+        console.log(error.message);
     }
 }
 
