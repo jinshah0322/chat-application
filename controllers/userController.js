@@ -303,16 +303,16 @@ const editProfile = async(req,res)=>{
         const userId = req.session.user._id
         const user = await User.findOne({_id:userId})
         if(username){
-            var usernameupdate = User.updateOne({_id:userId},{username:username})
+            await User.updateOne({_id:userId},{username:username})
         }
         if (req.file) {
-            var userimage = User.updateOne({_id:userId},{image:"images/"+req.file.filename})
+            await User.updateOne({_id:userId},{image:"images/"+req.file.filename})
         }
         if(mobile){
             if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
                 const allNumber = await User.find({mobile:mobile})
                 if(allNumber.length == 0){
-                    var numberupdate = User.updateOne({_id:userId},{mobile:mobile})
+                    await User.updateOne({_id:userId},{mobile:mobile})
                 } else{
                     res.json({render: "/editprofile",message:'User with same Mobile Number already exist'})
                 }
@@ -324,7 +324,7 @@ const editProfile = async(req,res)=>{
             if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
                 const allEmail = await User.find({email:email})
                 if(allEmail.length == 0){
-                    var emailupdate = User.updateOne({_id:userId},{email:email})
+                    await User.updateOne({_id:userId},{email:email})
                 } else{
                     res.json({render: "/editprofile",message:'User with same email address already exist'})
                 }   
@@ -332,10 +332,6 @@ const editProfile = async(req,res)=>{
                 res.json({render: "/editprofile",message:'Enter Valid email address'})
             }
         }
-        await userimage
-        await usernameupdate
-        await numberupdate
-        await emailupdate
         const oldEmail = user.email
         const updatedUser = await User.updateOne({email:oldEmail},{username,email,mobile})
         const html = `
