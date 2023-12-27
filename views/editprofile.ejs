@@ -200,8 +200,8 @@
                     if (response.redirectUrl) {
                         window.location.href = response.redirectUrl;
                     }
-                    if (response.render) {
-                        // Handle render if needed
+                    if (response.editProfile) {
+                        localStorage.setItem('profile_error',response.)
                     }
                 },
                 error: function(error) {
