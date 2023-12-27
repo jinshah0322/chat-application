@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {register,registerLoad,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat, loadForgotPassword, forgotPassword, loadChangePassword, changePassword} = require("../controllers/userController")
+const {register,registerLoad,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat, loadForgotPassword, forgotPassword, loadChangePassword, changePassword,loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard,adminSearch} = require("../controllers/userController")
 
 const path = require("path")
 const multer = require("multer")
@@ -29,8 +29,12 @@ router.route("/send-request").post(isLogin,sendrequest)
 router.route("/pendingrequest").get(isLogin,pendingrequest).post(isLogin,finishrequest)
 router.route("/forgot-password").get(isLogout,loadForgotPassword).post(isLogout,forgotPassword)
 router.route("/changepassword").get(isLogin,loadChangePassword).post(isLogin,changePassword)
+router.route("/editprofile").get(isLogin,loadEditProfile).post(isLogin,upload.single('profileImage'),editProfile)
+router.route("/deleteaccount").get(isLogin,loadDeleteaccount).post(isLogin,deleteaccount)
 
 router.route('/save-chat').post(saveChat)
+
+router.route("/admin").get(adminDashboard).post(adminSearch)
 
 router.route("*").get(function(req,res){
     res.redirect("/")

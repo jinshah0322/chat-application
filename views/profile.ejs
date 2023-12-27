@@ -1,113 +1,134 @@
 <%-include('layouts/header.ejs')%>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
-    <!-- Include Bootstrap stylesheet -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+    <!DOCTYPE html>
+    <html lang="en">
 
-        .profile-container {
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 35px;
-            border-radius: 8px;
-            width: 600px; /* Adjusted width to 600px for a wider layout */
-            text-align: center;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>User Profile - Chat application</title>
+        <!-- Include Bootstrap stylesheet -->
+        <style>
+            .profile-container {
+                background-color: #C6C8CA;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                padding: 35px;
+                border-radius: 8px;
+                width: 700px;
+                text-align: center;
+                display: flex;
+                align-items: center;
+            }
 
-        .profile-info {
-            margin-left: 20px;
-            text-align: left;
-        }
+            body {
+                color: #000 !important;
+            }
 
-        h1 {
-            color: #333;
-        }
+            .profile-info {
+                width: 100%;
+                margin-left: 20px;
+                text-align: left;
+            }
 
-        .profile-info p {
-            margin: 10px 0;
-        }
+            h1 {
+                color: #333;
+            }
 
-        img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-right: 20px;
-        }
+            .profile-info p {
+                margin: 10px 0;
+                font-size: 17px;
 
-        .btn-bootstrap {
-            /* Use the default Bootstrap color for the button */
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            box-sizing: border-box;
-            width: 100%;
-        }
+            }
 
-        .btn-bootstrap:hover {
-            background-color: #0056b3;
-        }
+            img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 30px;
+            }
 
-        a {
-            text-decoration: none;
-            color: #3498db;
-            margin-top: 10px;
-            display: inline-block;
-        }
+            .btn-bootstrap {
+                background-color: #007bff;
+                color: #fff;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+                padding: 10px;
+                border: none;
+                border-radius: 4px;
+                box-sizing: border-box;
+                width: 100%;
+            }
 
-        a:hover {
-            color: #2c3e50;
+            button:hover {
+                color: #fff !important;
+            }
+            
+        td:nth-child(1) {
+            vertical-align: middle !important;
+            font-weight: 700;
         }
+        td:nth-child(2){
+           color: #000 !important;
+        }
+        td{
+            font-size: 17px;
+            width: 200px !important ;
+        }            
+        </style>
+    </head>
 
-    </style>
-</head>
-<body>
-    <div class="profile-container">
-        <img src="<%=user.image%>" alt="Profile Image">
-        <div class="profile-info">
-            <h1>User Profile</h1>
-            <p><strong>Username:</strong> <%=user.username%></p>
-            <p><strong>Email:</strong> <%=user.email%></p>
-            <p><strong>Mobile:</strong> <%=user.mobile%></p>
-            <p><strong>Number of Friends:</strong> <%=user.friends.length%></p>
-            <div>
-                <button class="btn btn-bootstrap" onclick="redirectToEditProfile()">Edit Profile</button>
-                <button class="btn btn-bootstrap" onclick="redirectToChangePassword()">Change Password</button>
+    <body>
+        <div style="margin-left: 250px ;">
+            <h1 style="margin-top: -30px;font-weight: 700;color: #000;">User Profile</h1><br>
+            <div class="profile-container">
+                <div>
+                    <img src="<%=user.image%>" alt="Profile Image">
+                </div>
+                <div class="profile-info">
+
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>Username</td>
+                            <td> <%=user.username%></td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td><%=user.email%></td>
+                        </tr>
+                        <tr>
+                            <td>Mobile</td>
+                            <td> <%=user.mobile%></td>
+                        </tr>
+                        <tr>
+                            <td>Friends</td>
+                            <td> <%=user.friends.length%></td>
+                        </tr>
+                        <tr>
+                            <td>                        <button class="btn btn-bootstrap" onclick="redirectToEditProfile()">Edit Profile</button>
+                            </td>
+                            <td><button class="btn btn-bootstrap" style="margin-left: 10px;"
+                                onclick="redirectToChangePassword()">Change Password</button></td>
+                        </tr>
+                    </table>
+
+                  
+                </div>
             </div>
         </div>
-    </div>
-    <script>
-        function redirectToEditProfile() {
-            window.location.href = '/editprofile';
-        }
 
-        function redirectToChangePassword() {
-            window.location.href = '/changepassword';
-        }
-    </script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
-</html>
-<%-include('layouts/footer.ejs')%>
+        <script>
+            function redirectToEditProfile() {
+                window.location.href = '/editprofile';
+            }
+
+            function redirectToChangePassword() {
+                window.location.href = '/changepassword';
+            }
+        </script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    </body>
+
+    </html>
+    <%-include('layouts/footer.ejs')%>

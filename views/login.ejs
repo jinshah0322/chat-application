@@ -3,9 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - Chat application</title>
+    <link rel="icon" href=
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/A_logo_with_a_blue_paper_airplane.svg/1024px-A_logo_with_a_blue_paper_airplane.svg.png"
+              type="image/x-icon">    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
+<<<<<<< HEAD
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -22,11 +26,15 @@
         }
 
         .login-container {
+=======
+  
+  .login-container {
+>>>>>>> workingBranch
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             border-radius: 8px;
-            width: 400px; /* Adjusted width to 400px */
+            width: 600px; /* Adjusted width to 400px */
             text-align: center;
         }
 
@@ -46,6 +54,12 @@
             border-radius: 4px;
             box-sizing: border-box;
             width: 100%;
+        }
+
+        .login-container{
+            margin-left: 30vw !important;
+            margin-top: 23vh !important;
+            padding: 50px !important;
         }
 
         .btn-bootstrap {
@@ -81,9 +95,14 @@
         }
     </style>
 </head>
-<body>
+<body  style="background: #eee;">
+    <div>
     <div class="login-container">
+<<<<<<< HEAD
         <h1 class="font-weight-bold">Login</h1><br>
+=======
+        <h1>Login</h1><br>
+>>>>>>> workingBranch
         <% if (typeof message !== "undefined") { %>
             <p style="color: red;"><%= message %></p>
         <% } %>
@@ -98,7 +117,7 @@
             </div>
         </form>
     </div>
-
+</div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

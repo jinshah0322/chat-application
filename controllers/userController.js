@@ -3,6 +3,9 @@ const bcryptjs = require("bcryptjs")
 const sendEmail = require("../helper/sendEmail")
 const mongoose = require("mongoose")
 const Chat = require("../models/chatModel")
+const Activity = require("../models/activityModel");
+
+
 const registerLoad = async (req,res)=>{
     try{
         res.render("register")
@@ -44,6 +47,11 @@ const register = async(req,res)=>{
                             }
                             sendEmail(data)
                             await user.save()
+                            const activity = new Activity({
+                                activityType: "userRegistration",
+                                userId: user._id,
+                            });
+                            await activity.save();
                             res.redirect('/')
                         } else{res.render('register',{message:'Enter strong password'})}
                     } else{res.render('register',{message:'Enter Valid moile number'})}
@@ -75,7 +83,16 @@ const login = async(req,res)=>{
                 res.render('login',{ message: "Incorrect Password", success: false})
             } else {
                 req.session.user = user
-                res.redirect('/dashboard')
+                const activity = new Activity({
+                    activityType: "userLogin",
+                    userId: user._id,
+                });
+                await activity.save();
+                if(user.isAdmin){
+                    res.redirect("/admin")
+                } else{
+                    res.redirect('/dashboard')
+                }
             }
         }
     }catch(error){
@@ -85,6 +102,11 @@ const login = async(req,res)=>{
 
 const logout = async(req,res)=>{
     try{
+        const activity = new Activity({
+            activityType: "userLogout",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         req.session.destroy()
         res.redirect("/")
     } catch(error){
@@ -132,7 +154,10 @@ const reqsent = async(req,res)=>{
         const currentID = req.session.user._id
         users = users.filter(item=>item._id.toString()!==currentID)
         var reqsentid = await User.find({_id:currentID},{requestsSent:1,_id:0})
-        var reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
+        reqsentid = reqsentid.map(doc => doc.requestsSent).flat();
+        users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
+        reqsentid = await User.find({_id:currentID},{friends:1,_id:0})
+        reqsentid = reqsentid.map(doc => doc.friends).flat();
         users= users.filter(item=>!reqsentid.toString().includes(item._id.toString()))
         res.render('requestsent', { users, searchTerm });
     } catch(error){
@@ -145,6 +170,11 @@ const sendrequest = async(req,res)=>{
     const currentId = req.session.user._id
     await User.updateOne({_id:userId},{$push:{requestsReceived:currentId}})
     await User.updateOne({_id:currentId},{$push:{requestsSent:userId}})
+    const activity = new Activity({
+        activityType: "userSentRequest",
+        userId: req.session.user._id, 
+    });
+    await activity.save();
     res.redirect("/dashboard")
 }
 
@@ -168,9 +198,19 @@ const finishrequest = async(req,res)=>{
         await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
         await User.updateOne({_id:currentId},{$push:{friends:userId}})
         await User.updateOne({_id:userId},{$push:{friends:currentId}})
+        const activity = new Activity({
+            activityType: "userAcceptedRequest",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
     } else{
         await User.updateOne({_id:userId},{$pull:{requestsSent:currentId}})
         await User.updateOne({_id:currentId},{$pull:{requestsReceived:userId}})
+        const activity = new Activity({
+            activityType: "userRejectedRequest",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
     }
     res.redirect('/pendingrequest')
 }
@@ -183,6 +223,11 @@ const saveChat = async (req,res)=>{
             message:req.body.message
         })
         var newChat = await chat.save()
+        const activity = new Activity({
+            activityType: "UserChatting",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
         res.status(200).send({success:true,message:"Chat added to db successfully",data:newChat})
     }catch(error){
         res.status(400).send({success:false,message:error.message})
@@ -225,6 +270,11 @@ const forgotPassword = async(req,res)=>{
                 html: html
             }
             sendEmail(data)
+            const activity = new Activity({
+                activityType: "userForgotPassword",
+                userId: req.session.user._id, 
+            });
+            await activity.save();
             res.render("forgotpassword",{message:"Check your email address",success:true})
         } else{
             res.render("forgotpassword",{message:"user not found",success:false})
@@ -272,6 +322,11 @@ const changePassword = async(req,res)=>{
                         html: html
                     }
                     sendEmail(data)
+                    const activity = new Activity({
+                        activityType: "userChangedPassword",
+                        userId: req.session.user._id, 
+                    });
+                    await activity.save();
                     res.redirect('/profile')
                 } else{
                     res.render('changepassword',{message:'Enter strong password'})
@@ -283,6 +338,148 @@ const changePassword = async(req,res)=>{
     }
 }
 
+const loadEditProfile = async(req,res)=>{
+    try{
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
+        res.render("editprofile",{user:user})
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const editProfile = async(req,res)=>{
+    try{
+        const {username,email,mobile} = req.body
+        const userId = req.session.user._id
+        const user = await User.findOne({_id:userId})
+        if(username == ''){
+            return res.json({render: "/editprofile",message:'Username can not be empty'})
+        }
+        if(username){
+            var usernameupdate = User.updateOne({_id:userId},{username:username})
+        }
+        if (req.file) {
+            var userimage = User.updateOne({_id:userId},{image:"images/"+req.file.filename})
+        }
+        if(mobile){
+            if(/^(\+\d{1,3}[- ]?)?\d{10}$/.test(mobile)){
+                const allNumber = await User.find({mobile:mobile})
+                if(allNumber.length == 0){
+                    var numberupdate = User.updateOne({_id:userId},{mobile:mobile})
+                } else{
+                    return res.json({render: "/editprofile",message:'User with same Mobile Number already exist'})
+                }
+            } else{
+                return res.json({render: "/editprofile",message:'Enter Valid moile number'})
+            }
+        }
+        if(email){
+            if(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(email)){
+                const allEmail = await User.find({email:email})
+                if(allEmail.length == 0){
+                    var emailupdate = User.updateOne({_id:userId},{email:email})
+                } else{
+                    return res.json({render: "/editprofile",message:'User with same email address already exist'})
+                }   
+            } else{
+               return res.json({render: "/editprofile",message:'Enter Valid email address'})
+            }
+        }
+        await userimage
+        await usernameupdate
+        await numberupdate
+        await emailupdate
+        const oldEmail = user.email
+        const updatedUser = await User.updateOne({email:oldEmail},{username,email,mobile})
+        const html = `
+                <h2>Your Profile has been Updatedn </h2>
+                <p>Dear ${username},</p>
+                <p>We want to inform you that your profile on our application has been successfully updated. Your changes have been saved, and your profile now reflects the updated information.If you have any further updates or need assistance, feel free to log in to your account and make the necessary changes. If you have any questions, please contact our support team at <a href="mailto:jinshah0322@gmail.com">jinshah0322@gmail.com</a></p>
+                <p>Best regards,<br>[Jinay Shah]</p>
+            `
+        var data = {
+            to: email,
+            text: `Hey ${username}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail(data)
+        data = {
+            to: oldEmail,
+            text: `Hey ${username}`,
+            subject: "Your Profile has been Updated",
+            html: html
+        }
+        sendEmail()
+        const activity = new Activity({
+            activityType: "userEditedProfile",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
+        res.json({ redirectUrl: "/profile" });
+    }catch(error){
+        console.log(error);
+    }
+}
+
+const loadDeleteaccount = async(req,res)=> {
+    try{
+        res.render("deleteaccount")
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+const deleteaccount = async(req,res)=>{
+    try{
+        const userId = req.session.user._id
+        await User.updateMany({},{$pull:{friends:userId}})
+        await User.deleteOne({_id:userId})
+        await Chat.deleteMany({$or:[{sender_id:userId},{receiver_id:userId}]})
+        const activity = new Activity({
+            activityType: "userDeletedProfile",
+            userId: req.session.user._id, 
+        });
+        await activity.save();
+        req.session.destroy()
+        res.redirect("/")
+    } catch(error){
+        console.log(error.message);
+    }
+}
+
+const adminDashboard = async (req, res) => {
+    try {
+        if (!req.session.user || !req.session.user.isAdmin) {
+            res.redirect('/login'); // Redirect non-admin users to login
+        } else {
+            res.render('adminDashboard', { activities: await Activity.find() });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+const adminSearch = async(req,res)=>{
+    try {
+        if (!req.session.user || !req.session.user.isAdmin) {
+            res.redirect('/login'); // Redirect non-admin users to login
+        } else {
+            const {searchTerm} = req.body
+            var searchTermRegex = new RegExp(searchTerm, 'i');
+            var activities = await Activity.find({
+                $or: [
+                    { activityType: searchTermRegex },
+                ]});
+            res.render('adminDashboard', { activities: activities});
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports = {
-    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword
+    registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword,
+    loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard,adminSearch
 }

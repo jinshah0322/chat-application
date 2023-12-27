@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Register - Chat application</title>
     <!-- Include Bootstrap stylesheet -->
+    <link rel="icon" href=
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/A_logo_with_a_blue_paper_airplane.svg/1024px-A_logo_with_a_blue_paper_airplane.svg.png"
+              type="image/x-icon">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
         body {
@@ -22,11 +25,11 @@
         }
         .register-container {
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);        
             border-radius: 8px;
-            width: 400px; /* Adjusted width to 400px */
+            width: 600px; /* Adjusted width to 400px */
             text-align: center;
+            padding: 40px !important;
         }
 
         h1 {
@@ -87,7 +90,11 @@
 </head>
 <body>
     <div class="register-container">
+<<<<<<< HEAD
         <h1 class="font-weight-bold">Register</h1><br>
+=======
+        <h1>Register</h1><br>
+>>>>>>> workingBranch
         <% if (typeof message !== "undefined") { %>
             <p style="color: red;"><%= message %></p>
         <% } %>
@@ -96,7 +103,7 @@
             <input type="email" name="email" placeholder="Enter your email" autocomplete="off" required>
             <input type="text" name="mobile" placeholder="Enter your mobile number" autocomplete="off" required>
             <input type="password" name="password" placeholder="Enter your password" required>
-            <input type="file" name="image" required>
+            <input type="file" name="image"accept="image/*" required>
             <!-- Apply Bootstrap styles to the button -->
             <button type="submit" accept=".png, .jpg, .jpeg" class="btn mt-2 btn-bootstrap">Register</button>
             <a href="/" class="mt-3">Login</a>
