@@ -34,7 +34,7 @@ router.route("/deleteaccount").get(isLogin,loadDeleteaccount).post(isLogin,delet
 
 router.route('/save-chat').post(saveChat)
 
-router.route("/admin").get(adminDashboard).post(adminDashboard)
+router.route("/admin").get(adminDashboard).post(adminSearch)
 
 router.route("*").get(function(req,res){
     res.redirect("/")

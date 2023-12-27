@@ -467,13 +467,11 @@ const adminSearch = async(req,res)=>{
             res.redirect('/login'); // Redirect non-admin users to login
         } else {
             const {searchTerm} = req.body
-            const activities = await Activity.find({
-                $or:[
-                    {activityType:searchTerm},
-                    {userId:searchTerm},
-                    {timestamp:searchTerm}
-                ]
-            })
+            var searchTermRegex = new RegExp(searchTerm, 'i');
+            var activities = await Activity.find({
+                $or: [
+                    { activityType: searchTermRegex },
+                ]});
             res.render('adminDashboard', { activities: activities});
         }
     } catch (error) {
