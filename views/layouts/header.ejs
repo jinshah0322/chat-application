@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
-    <title>Chat application</title>
+    <!-- <title>Chat application</title> -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="icon" href=
+    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/A_logo_with_a_blue_paper_airplane.svg/1024px-A_logo_with_a_blue_paper_airplane.svg.png"
+              type="image/x-icon">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -47,11 +49,12 @@
                     <a href="/profile" class="profile-link"><span class="fa fa-user mr-3"></span>Profile</a>
                 </li>
                 <li>
+                    <a href="/deleteaccount" class="delete-link"><span class="fa fa-trash mr-3"></span> Delete Account</a>
+                </li>                
+                <li>
                     <a href="/logout" class="logout-link"><span class="fa fa-sign-out mr-3"></span> Logout</a>
                 </li>
-                <li>
-                    <a href="/deleteaccount" class="logout-link"><span class="fa fa-trash mr-3"></span> Delete Account</a>
-                </li>
+              
             </ul>
 
         </nav>
@@ -65,17 +68,29 @@
 
                     if (currentUrl.includes('/dashboard')) {
                         $('.dashboard-link').css('color', 'white');
+                        $('.dashboard-link').css('background', 'rgba(0,0,0,0.6)');
                     } else if (currentUrl.includes('/requestsent')) {
                         $('.request-link').css('color', 'white');
+                        $('.request-link').css('background', 'rgba(0,0,0,0.6)');
                     } else if (currentUrl.includes('/pendingrequest')) {
                         $('.pending-link').css('color', 'white');
+                        $('.pending-link').css('background', 'rgba(0,0,0,0.6)');
                     } else if (currentUrl.includes('/profile')) {
                         $('.profile-link').css('color', 'white');
+                        $('.profile-link').css('background', 'rgba(0,0,0,0.6)');
+
                     } else if (currentUrl.includes('/logout')) {
                         $('.logout-link').css('color', 'white');
+                        $('.logout-link').css('background', 'rgba(0,0,0,0.6)');
                     }
                     else if (currentUrl.includes('/editprofile')) {
                         $('.profile-link').css('color', 'white');
+                        $('.profile-link').css('background', 'rgba(0,0,0,0.6)');
+                    }
+                    else if (currentUrl.includes('/deleteaccount')) {
+                        $('.delete-link').css('color', 'white');
+                        $('.delete-link').css('background', 'rgba(0,0,0,0.6)');
+
                     }
                 });
             </script>
