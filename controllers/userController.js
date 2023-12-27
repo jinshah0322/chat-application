@@ -88,7 +88,11 @@ const login = async(req,res)=>{
                     userId: user._id,
                 });
                 await activity.save();
-                res.redirect('/dashboard')
+                if(user.isAdmin){
+                    res.redirect("/admin")
+                } else{
+                    res.redirect('/dashboard')
+                }
             }
         }
     }catch(error){
@@ -445,7 +449,19 @@ const deleteaccount = async(req,res)=>{
     }
 }
 
+const adminDashboard = async (req, res) => {
+    try {
+        if (!req.session.user || !req.session.user.isAdmin) {
+            res.redirect('/login'); // Redirect non-admin users to login
+        } else {
+            res.render('adminDashboard', { activities: await Activity.find() });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
 module.exports = {
     registerLoad,register,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat,loadForgotPassword,forgotPassword,loadChangePassword,changePassword,
-    loadEditProfile,editProfile,loadDeleteaccount,deleteaccount
+    loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard
 }

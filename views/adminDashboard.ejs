@@ -1,0 +1,32 @@
+<%- include('layouts/adminHeader.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Activity Type</th>
+        <th>User ID</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% activities.forEach(activity => { %>
+        <tr>
+          <td><%= activity.activityType %></td>
+          <td><%= activity.userId %></td>
+          <td><%= activity.timestamp %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {register,registerLoad,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat, loadForgotPassword, forgotPassword, loadChangePassword, changePassword,loadEditProfile,editProfile,loadDeleteaccount,deleteaccount} = require("../controllers/userController")
+const {register,registerLoad,loginLoad,login,logout,loaddashboard,loadprofile,loadreqsent,reqsent,sendrequest,pendingrequest,finishrequest,saveChat, loadForgotPassword, forgotPassword, loadChangePassword, changePassword,loadEditProfile,editProfile,loadDeleteaccount,deleteaccount,adminDashboard} = require("../controllers/userController")
 
 const path = require("path")
 const multer = require("multer")
@@ -33,6 +33,8 @@ router.route("/editprofile").get(isLogin,loadEditProfile).post(isLogin,upload.si
 router.route("/deleteaccount").get(isLogin,loadDeleteaccount).post(isLogin,deleteaccount)
 
 router.route('/save-chat').post(saveChat)
+
+router.route("/admin").get(adminDashboard)
 
 router.route("*").get(function(req,res){
     res.redirect("/")

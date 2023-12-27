@@ -38,6 +38,10 @@ var userSchema = new mongoose.Schema({
         type: String,
         ref: 'User',
     }],
+    isAdmin:{
+        type:Boolean,
+        default:false
+    }
 },{timestamps:true});
 
 //Export the model
