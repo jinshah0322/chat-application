@@ -91,32 +91,30 @@
         <div class="profile-container">
             <div class="profile-image-container" onclick="document.getElementById('fileInput').click();">
                 <img src="<%= user.image %>" alt="Profile Image">
-                <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*" onchange="displayImage(this);">
+                <input type="file" class="file-input" id="fileInput" name="profileImage" accept="image/*" >
             </div>
 
             <div class="profile-info">              
                 <div style="display: flex;">
-                    <form action="" method="post">
-                        <table class="table table-borderless">
-                            <tr>
-                                <td class="heading">Username </td>
-                                <td>
-                                    <input type="text" class="intput-field form-control" name="username" id="usernameInput" value="<%=user.username%>">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="heading">Email </td>
-                                <td><input type="email" class="intput-field form-control" name="email" id="emailInput" value="<%=user.email%>"></td>
-                            </tr>
-                            <tr>
-                                <td class="heading">Mobile </td>
-                                <td> <input type="text" class="intput-field form-control" name="mobile" id="mobileInput" value="<%=user.mobile%>"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"> <input type="submit" class="btn btn-bootstrap" value="Update" id="updateButton" disabled></td>
-                            </tr>
-                        </table>
-                    </form>
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="heading">Username </td>
+                            <td>
+                                <input type="text" class="intput-field form-control" name="username" id="usernameInput" value="<%=user.username%>">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="heading">Email </td>
+                            <td><input type="email" class="intput-field form-control" name="email" id="emailInput" value="<%=user.email%>"></td>
+                        </tr>
+                        <tr>
+                            <td class="heading">Mobile </td>
+                            <td> <input type="text" class="intput-field form-control" name="mobile" id="mobileInput" value="<%=user.mobile%>"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"> <button class="btn btn-bootstrap" id="updateButton" disabled onclick="submitForm()">Update</button></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
@@ -132,30 +130,31 @@
                 email: "<%=user.email%>",
                 mobile: "<%=user.mobile%>"
             };
-
+    
             // Check for changes in input fields
             $('#usernameInput, #emailInput, #mobileInput').on('input', function() {
                 enableUpdateButton();
             });
-
+    
             // Check for changes when the file input changes
             $('#fileInput').on('change', function() {
-                displayImage(this);
                 enableUpdateButton();
             });
-
+    
             // Enable or disable the update button based on changes
             function enableUpdateButton() {
                 var updateButton = $('#updateButton');
                 var usernameInput = $('#usernameInput');
                 var emailInput = $('#emailInput');
                 var mobileInput = $('#mobileInput');
-
+                var fileInput = $('#fileInput');
+    
                 // Enable the button if any of the input values change
                 if (
                     usernameInput.val() !== initialValues.username ||
                     emailInput.val() !== initialValues.email ||
-                    mobileInput.val() !== initialValues.mobile
+                    mobileInput.val() !== initialValues.mobile ||
+                    fileInput[0].files.length > 0
                 ) {
                     updateButton.prop('disabled', false);
                 } else {
@@ -163,18 +162,55 @@
                 }
             }
         });
-
-        function displayImage(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    $('.profile-image-container img').attr('src', e.target.result);
-                    localStorage.setItem('newImagePath', e.target.result);
-                };
-                reader.readAsDataURL(input.files[0]);
+    
+        function submitForm() {
+            // Prepare data to send to the server using FormData
+            var formData = new FormData();
+            var usernameInput = $('#usernameInput');
+            var emailInput = $('#emailInput');
+            var mobileInput = $('#mobileInput');
+            var fileInput = $('#fileInput')[0].files[0];
+    
+            // Check if each field has changed and include in formData
+            if (usernameInput.val() !== '<%=user.username%>') {
+                formData.append('username', usernameInput.val());
             }
+    
+            if (emailInput.val() !== '<%=user.email%>') {
+                formData.append('email', emailInput.val());
+            }
+    
+            if (mobileInput.val() !== '<%=user.mobile%>') {
+                formData.append('mobile', mobileInput.val());
+            }
+    
+            // Add the file to the formData if it exists
+            if (fileInput) {
+                formData.append('profileImage', fileInput);
+            }
+    
+            // Make an AJAX request to submit the form
+            $.ajax({
+                url: '/editprofile',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log(response);
+                    if (response.redirectUrl) {
+                        window.location.href = response.redirectUrl;
+                    }
+                    if (response.render) {
+                        // Handle render if needed
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
         }
-    </script>
+    </script>    
 
     <%- include('layouts/footer.ejs') %>
 </body>
