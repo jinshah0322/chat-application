@@ -19,6 +19,9 @@
         .sidebar {
             height: 100vh !important;
         }
+        .here{
+            pointer-events: none;
+        }
     </style>
 </head>
 
@@ -69,27 +72,40 @@
                     if (currentUrl.includes('/dashboard')) {
                         $('.dashboard-link').css('color', 'white');
                         $('.dashboard-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.dashboard-link').addClass('here');
+
                     } else if (currentUrl.includes('/requestsent')) {
                         $('.request-link').css('color', 'white');
                         $('.request-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.request-link').addClass('here');
+
                     } else if (currentUrl.includes('/pendingrequest')) {
                         $('.pending-link').css('color', 'white');
                         $('.pending-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.pending-link').addClass('here');
+
                     } else if (currentUrl.includes('/profile')) {
                         $('.profile-link').css('color', 'white');
                         $('.profile-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.profile-link').addClass('here');
 
                     } else if (currentUrl.includes('/logout')) {
                         $('.logout-link').css('color', 'white');
                         $('.logout-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.logout-link').addClass('here');
+
                     }
                     else if (currentUrl.includes('/editprofile')) {
                         $('.profile-link').css('color', 'white');
                         $('.profile-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.profile-link').addClass('here');
+
                     }
                     else if (currentUrl.includes('/deleteaccount')) {
                         $('.delete-link').css('color', 'white');
                         $('.delete-link').css('background', 'rgba(0,0,0,0.6)');
+                        $('.delete-link').addClass('here');
+
 
                     }
                 });
